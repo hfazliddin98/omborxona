@@ -8,6 +8,7 @@ class Users(AbstractUser):
     superadmin = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
     komendant = models.BooleanField(default=False)
+    parol = models.CharField(max_length=255, blank=True)
 
 
 

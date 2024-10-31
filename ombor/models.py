@@ -9,9 +9,30 @@ class Kategoriya(AsosiyModel):
         return self.name
 
 class MaxsulotNomi(AsosiyModel):
-    kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE, related_name='maxsulot')
+    kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     
     def __str__(self):
         return self.name
 
+class Birlik(AsosiyModel):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class OmborniYopish(AsosiyModel):
+    yopish = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.yopish
+
+class Ombor(AsosiyModel):
+    kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
+    maxsulot_nomi = models.ForeignKey(MaxsulotNomi, on_delete=models.CASCADE)
+    qiymat = models.CharField(max_length=255)
+    birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
+    maxviylik = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.kategoriya
