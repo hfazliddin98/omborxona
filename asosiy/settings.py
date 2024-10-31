@@ -104,6 +104,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://kspi.uz",
     "http://kspiadmin.kspi.uz",     
     "https://kspiadmin.kspi.uz",
+    "http://omborxona2024.pythonanywhere.com",     
+    "https://omborxona2024.pythonanywhere.com",
 ]
 
 
