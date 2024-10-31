@@ -97,11 +97,14 @@ REST_FRAMEWORK = {
 
 }
 
-
-CORS_ALLOW_ALL_ORIGINS = True # True bolsa  CORS_ALLOWED_ORIGINS ishlamay qoladi
-# CORS_ALLOW_CREDENTIALS = True
-
-CORS_ALLOW_HEADERS = ['*']
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Frontend domaingizni qo'shing
+    "http://localhost:3001",  # Frontend domaingizni qo'shing
+    "http://kspi.uz",     
+    "https://kspi.uz",
+    "http://kspiadmin.kspi.uz",     
+    "https://kspiadmin.kspi.uz",
+]
 
 
 
@@ -179,9 +182,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'uz'
+
+TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 
