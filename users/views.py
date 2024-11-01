@@ -12,5 +12,5 @@ def bosh_sahifa(request):
 
 
 class UserViewSet(ModelViewSet):
-    queryset = Users.objects.all()
+    queryset = Users.objects.filter(is_superuser=False)
     serializer_class = UserSerializer
