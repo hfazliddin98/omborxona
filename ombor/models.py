@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import AsosiyModel
+from users.models import AsosiyModel, Users
 
 
 class Kategoriya(AsosiyModel):
@@ -39,6 +39,7 @@ class Ombor(AsosiyModel):
     
 
 class Korzinka(AsosiyModel):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
     kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
     maxsulot_nomi = models.ForeignKey(MaxsulotNomi, on_delete=models.CASCADE)
     qiymat = models.CharField(max_length=255)
