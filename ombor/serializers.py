@@ -42,4 +42,8 @@ class OlinganMaxsulotlarSerializer(serializers.ModelSerializer):
         model = OlinganMaxsulotlar
         fields = '__all__'
 
+class BuyurtmaSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Buyurtma
+        fields = '__all__'
 

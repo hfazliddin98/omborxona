@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import SimpleRouter
 from .views import KategoriyaViewSet, MaxsulotViewSet, BirlikViewSet, OmborniYopishViewSet, OmborViewSet
-from .views import KorzinkaViewSet, OlinganMaxsulotlarViewSet, BuyurtmaViewSet
+from .views import KorzinkaViewSet, OlinganMaxsulotlarViewSet, BuyurtmaViewSet, BuyurtmaSearchView
 
 router = SimpleRouter()
 router.register(r'kategoriya', KategoriyaViewSet, basename='kategoriya')
@@ -14,5 +14,7 @@ router.register(r'korzinka', KorzinkaViewSet, basename='korzinka')
 router.register(r'olingan_maxsulotlar', OlinganMaxsulotlarViewSet, basename='olingan_maxsulotlar')
 
 
-urlpatterns = []
+urlpatterns = [
+    path('buyurtma_search/', BuyurtmaSearchView.as_view(), name='buyurtma_search')
+]
 urlpatterns += router.urls
