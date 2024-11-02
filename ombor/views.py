@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from .models import Kategoriya, MaxsulotNomi, Birlik, OmborniYopish, Ombor, Korzinka
-from .serializers import KategoriyaSerializer, MaxsulotNomiSerializer, KorzinkaSerializer
+from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
+from .models import OlinganMaxsulotlar
+from .serializers import KategoriyaSerializer, MaxsulotSerializer, KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer, OmborSerializer
+from .serializers import OlinganMaxsulotlarSerializer
 
 
 
@@ -10,9 +12,9 @@ class KategoriyaViewSet(ModelViewSet):
     queryset = Kategoriya.objects.all()
     serializer_class = KategoriyaSerializer
 
-class MaxsulotNomiViewSet(ModelViewSet):
-    queryset = MaxsulotNomi.objects.all()
-    serializer_class = MaxsulotNomiSerializer
+class MaxsulotViewSet(ModelViewSet):
+    queryset = Maxsulot.objects.all()
+    serializer_class = MaxsulotSerializer
 
 class BirlikViewSet(ModelViewSet):
     queryset = Birlik.objects.all()
@@ -29,3 +31,7 @@ class OmborViewSet(ModelViewSet):
 class KorzinkaViewSet(ModelViewSet):
     queryset = Korzinka.objects.all()
     serializer_class = KorzinkaSerializer
+
+class OlinganMaxsulotlarViewSet(ModelViewSet):
+    queryset = OlinganMaxsulotlar.objects.all()
+    serializer_class = OlinganMaxsulotlarSerializer

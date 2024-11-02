@@ -8,9 +8,10 @@ class Kategoriya(AsosiyModel):
     def __str__(self):
         return self.name
 
-class MaxsulotNomi(AsosiyModel):
+class Maxsulot(AsosiyModel):
     kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    maxviylik = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name
@@ -28,33 +29,30 @@ class OmborniYopish(AsosiyModel):
         return self.yopish
 
 class Ombor(AsosiyModel):
-    kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
-    maxsulot_nomi = models.ForeignKey(MaxsulotNomi, on_delete=models.CASCADE)
+    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
     qiymat = models.CharField(max_length=255)
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
-    maxviylik = models.BooleanField(default=False)
+
 
     def __str__(self):
-        return self.kategoriya 
+        return self.maxsulot.name 
 
 class Korzinka(AsosiyModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
-    maxsulot_nomi = models.ForeignKey(MaxsulotNomi, on_delete=models.CASCADE)
+    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
     qiymat = models.CharField(max_length=255)
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.kategoriya
+        return self.maxsulot.name
 
 class OlinganMaxsulotlar(AsosiyModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
-    maxsulot_nomi = models.ForeignKey(MaxsulotNomi, on_delete=models.CASCADE)
+    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
     qiymat = models.CharField(max_length=255)
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.kategoriya
+        return self.maxsulot.name
