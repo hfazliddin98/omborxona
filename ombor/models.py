@@ -35,8 +35,7 @@ class Ombor(AsosiyModel):
     maxviylik = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.kategoriya
-    
+        return self.kategoriya 
 
 class Korzinka(AsosiyModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
@@ -45,7 +44,17 @@ class Korzinka(AsosiyModel):
     qiymat = models.CharField(max_length=255)
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
-    tasdiqlash   = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.kategoriya
+
+class OlinganMaxsulotlar(AsosiyModel):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
+    maxsulot_nomi = models.ForeignKey(MaxsulotNomi, on_delete=models.CASCADE)
+    qiymat = models.CharField(max_length=255)
+    birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
+    active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.kategoriya
