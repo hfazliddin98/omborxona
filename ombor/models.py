@@ -1,4 +1,5 @@
 from django.db import models
+from decimal import Decimal
 from users.models import AsosiyModel, Users
 
 
@@ -30,12 +31,22 @@ class OmborniYopish(AsosiyModel):
 
 class Ombor(AsosiyModel):
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
-    qiymat = models.CharField(max_length=255)
+    qiymat = models.DecimalField(max_digits=10, decimal_places=2) 
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
 
 
     def __str__(self):
         return self.maxsulot.name 
+    
+class JamiMahsulot(AsosiyModel):
+    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
+    qiymat = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00')) 
+    birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.maxsulot.name 
+        
     
 class Buyurtma(AsosiyModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
@@ -47,7 +58,7 @@ class Buyurtma(AsosiyModel):
 class Korzinka(AsosiyModel):
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
-    qiymat = models.CharField(max_length=255)
+    qiymat = models.DecimalField(max_digits=10, decimal_places=2) 
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
 
@@ -57,7 +68,7 @@ class Korzinka(AsosiyModel):
 class OlinganMaxsulotlar(AsosiyModel):
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
-    qiymat = models.CharField(max_length=255)
+    qiymat = models.DecimalField(max_digits=10, decimal_places=2) 
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
 
