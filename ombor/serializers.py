@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulotlar, Buyurtma
+from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot
 
 class KategoriyaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,5 +45,10 @@ class OlinganMaxsulotlarSerializer(serializers.ModelSerializer):
 class BuyurtmaSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Buyurtma
+        fields = '__all__'
+
+class JamiMahsulotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JamiMahsulot
         fields = '__all__'
 

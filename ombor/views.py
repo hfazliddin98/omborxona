@@ -1,13 +1,15 @@
 from django.shortcuts import render
+from django.db.models import Sum 
 from rest_framework import filters
+from decimal import Decimal
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulotlar, Buyurtma
+from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot
 from .serializers import KategoriyaSerializer, MaxsulotSerializer, KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer, OmborSerializer
 from .serializers import OlinganMaxsulotlarSerializer, BuyurtmaSerializer, BuyurtmaSearchSerializer
-
+from .serializers import JamiMahsulotSerializer
 
 
 class KategoriyaViewSet(ModelViewSet):
@@ -30,6 +32,28 @@ class OmborViewSet(ModelViewSet):
     queryset = Ombor.objects.all()
     serializer_class = OmborSerializer
 
+    def perform_create(self, serializer):
+        # Ombor yozuvini saqlaydi
+        instance = serializer.save()
+
+        # JamiMahsulot jadvalidagi qiymatni yangilaydi yoki yangi yozuv yaratadi
+        jami_mahsulot, created = JamiMahsulot.objects.get_or_create(
+            maxsulot=instance.maxsulot,
+            defaults={'qiymat': 0.0, 'birlik': instance.birlik}
+        )
+
+        # Olingan mahsulotlarning umumiy qiymatini hisoblaymiz
+        olingan_jami_qiymat = OlinganMaxsulotlar.objects.filter(
+            maxsulot=instance.maxsulot,
+            active=True
+        ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0
+
+        # Jami mahsulot qiymatidan olingan mahsulot qiymatini ayiramiz
+        jami_mahsulot.qiymat = Decimal(jami_mahsulot.qiymat) + Decimal(instance.qiymat) - Decimal(olingan_jami_qiymat)
+        
+        jami_mahsulot.save()
+
+
 class BuyurtmaViewSet(ModelViewSet):
     queryset = Buyurtma.objects.all()
     serializer_class = BuyurtmaSerializer
@@ -41,6 +65,10 @@ class KorzinkaViewSet(ModelViewSet):
 class OlinganMaxsulotlarViewSet(ModelViewSet):
     queryset = OlinganMaxsulotlar.objects.all()
     serializer_class = OlinganMaxsulotlarSerializer
+
+class JamiMahsulotViewSet(ModelViewSet):
+    queryset = JamiMahsulot.objects.all()
+    serializer_class = JamiMahsulotSerializer
 
 
 
