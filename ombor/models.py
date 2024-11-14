@@ -40,6 +40,9 @@ class Ombor(AsosiyModel):
 class Buyurtma(AsosiyModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
+    sorov = models.BooleanField(default=False)
+    tasdiq = models.BooleanField(default=False)
+    rad = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user   
