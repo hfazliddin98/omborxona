@@ -56,7 +56,7 @@ class Buyurtma(AsosiyModel):
     rad = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user   
+        return self.user.username   
 
 class Korzinka(AsosiyModel):
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
