@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
 from django.db.models import Sum 
 from rest_framework import filters
 from decimal import Decimal
@@ -32,30 +33,7 @@ class OmborViewSet(ModelViewSet):
     queryset = Ombor.objects.all()
     serializer_class = OmborSerializer
 
-    def perform_create(self, serializer):
-        # Ombor yozuvini saqlaydi
-        instance = serializer.save()
 
-        # JamiMahsulot jadvalidagi qiymatni yangilaydi yoki yangi yozuv yaratadi
-        jami_mahsulot, created = JamiMahsulot.objects.get_or_create(
-            maxsulot=instance.maxsulot,
-            defaults={'qiymat': 0.0, 'birlik': instance.birlik}
-        )
-
-        # Olingan mahsulotlarning umumiy qiymatini hisoblaymiz
-        olingan_jami_qiymat = OlinganMaxsulotlar.objects.filter(
-            maxsulot=instance.maxsulot,
-            active=True
-        ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0
-
-        print(f"Joriy jami qiymat: {jami_mahsulot.qiymat}")
-        print(f"Ombor qiymati: {instance.qiymat}")
-        print(f"Olingan jami qiymat: {olingan_jami_qiymat}")
-
-        # Jami mahsulot qiymatidan olingan mahsulot qiymatini ayiramiz
-        jami_mahsulot.qiymat = Decimal(jami_mahsulot.qiymat) - Decimal(olingan_jami_qiymat)
-        
-        jami_mahsulot.save()
 
 
 class BuyurtmaViewSet(ModelViewSet):
@@ -70,9 +48,31 @@ class OlinganMaxsulotlarViewSet(ModelViewSet):
     queryset = OlinganMaxsulotlar.objects.all()
     serializer_class = OlinganMaxsulotlarSerializer
 
-class JamiMahsulotViewSet(ModelViewSet):
+# class JamiMahsulotViewSet(ModelViewSet):
+#     queryset = JamiMahsulot.objects.all()
+#     serializer_class = JamiMahsulotSerializer
+
+class JamiMahsulotListAPIView(ListAPIView):
     queryset = JamiMahsulot.objects.all()
     serializer_class = JamiMahsulotSerializer
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        response_data = []
+
+        for jami_mahsulot in queryset:
+            # Olingan mahsulotlarning umumiy qiymatini hisoblash
+            olingan_jami_qiymat = OlinganMaxsulotlar.objects.filter(
+                maxsulot=jami_mahsulot.maxsulot,
+                active=True
+            ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0
+
+            # Javob ma'lumotlarini tayyorlash
+            response_data.append({
+                'jami_mahsulot': JamiMahsulotSerializer(jami_mahsulot).data
+            })
+
+        return Response(response_data)
 
 
 
