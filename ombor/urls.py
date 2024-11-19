@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter
 from .views import KategoriyaViewSet, MaxsulotViewSet, BirlikViewSet, OmborniYopishViewSet, OmborViewSet
 from .views import KorzinkaViewSet, OlinganMaxsulotlarViewSet, BuyurtmaViewSet, BuyurtmaSearchView
-from .views import JamiMahsulotListAPIView
+from .views import JamiMahsulotViewSet
 
 
 router = SimpleRouter()
@@ -14,11 +14,11 @@ router.register(r'ombor', OmborViewSet, basename='ombor')
 router.register(r'buyurtma', BuyurtmaViewSet, basename='buyurtma')
 router.register(r'korzinka', KorzinkaViewSet, basename='korzinka')
 router.register(r'olingan_maxsulotlar', OlinganMaxsulotlarViewSet, basename='olingan_maxsulotlar')
-# router.register(r'jami_maxsulotlar', JamiMahsulotViewSet, basename='jami_maxsulotlar')
+router.register(r'jami_maxsulotlar', JamiMahsulotViewSet, basename='jami_maxsulotlar')
 
 
 urlpatterns = [
     path('buyurtma_search/', BuyurtmaSearchView.as_view(), name='buyurtma_search'),
-    path('jami_maxsulotlar/', JamiMahsulotListAPIView.as_view(), name='jami_maxsulotlar')
+    # path('jami_maxsulotlar/', JamiMahsulotListAPIView.as_view(), name='jami_maxsulotlar')
 ]
 urlpatterns += router.urls

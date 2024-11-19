@@ -48,31 +48,31 @@ class OlinganMaxsulotlarViewSet(ModelViewSet):
     queryset = OlinganMaxsulotlar.objects.all()
     serializer_class = OlinganMaxsulotlarSerializer
 
-# class JamiMahsulotViewSet(ModelViewSet):
-#     queryset = JamiMahsulot.objects.all()
-#     serializer_class = JamiMahsulotSerializer
-
-class JamiMahsulotListAPIView(ListAPIView):
+class JamiMahsulotViewSet(ModelViewSet):
     queryset = JamiMahsulot.objects.all()
     serializer_class = JamiMahsulotSerializer
 
-    def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        response_data = []
+# class JamiMahsulotListAPIView(ListAPIView):
+#     queryset = JamiMahsulot.objects.all()
+#     serializer_class = JamiMahsulotSerializer
 
-        for jami_mahsulot in queryset:
-            # Olingan mahsulotlarning umumiy qiymatini hisoblash
-            olingan_jami_qiymat = OlinganMaxsulotlar.objects.filter(
-                maxsulot=jami_mahsulot.maxsulot,
-                active=True
-            ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0
+#     def get(self, request, *args, **kwargs):
+#         queryset = self.get_queryset()
+#         response_data = []
 
-            # Javob ma'lumotlarini tayyorlash
-            response_data.append({
-                'jami_mahsulot': JamiMahsulotSerializer(jami_mahsulot).data
-            })
+#         for jami_mahsulot in queryset:
+#             # Olingan mahsulotlarning umumiy qiymatini hisoblash
+#             olingan_jami_qiymat = OlinganMaxsulotlar.objects.filter(
+#                 maxsulot=jami_mahsulot.maxsulot,
+#                 active=True
+#             ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0
 
-        return Response(response_data)
+#             # Javob ma'lumotlarini tayyorlash
+#             response_data.append({
+#                 'jami_mahsulot': JamiMahsulotSerializer(jami_mahsulot).data
+#             })
+
+#         return Response(response_data)
 
 
 
