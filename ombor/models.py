@@ -40,7 +40,7 @@ class Ombor(AsosiyModel):
     
 class JamiMahsulot(AsosiyModel):
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
-    qiymat = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00')) 
+    qiymat = models.DecimalField(max_digits=10, decimal_places=1, default=Decimal('0.00')) 
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
 
 

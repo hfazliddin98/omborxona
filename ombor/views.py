@@ -48,8 +48,12 @@ class OmborViewSet(ModelViewSet):
             active=True
         ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0
 
+        print(f"Joriy jami qiymat: {jami_mahsulot.qiymat}")
+        print(f"Ombor qiymati: {instance.qiymat}")
+        print(f"Olingan jami qiymat: {olingan_jami_qiymat}")
+
         # Jami mahsulot qiymatidan olingan mahsulot qiymatini ayiramiz
-        jami_mahsulot.qiymat = Decimal(jami_mahsulot.qiymat) + Decimal(instance.qiymat) - Decimal(olingan_jami_qiymat)
+        jami_mahsulot.qiymat = Decimal(jami_mahsulot.qiymat) - Decimal(olingan_jami_qiymat)
         
         jami_mahsulot.save()
 
