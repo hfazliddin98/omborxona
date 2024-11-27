@@ -13,6 +13,7 @@ class Maxsulot(AsosiyModel):
     kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     maxviylik = models.BooleanField(default=False)
+    it_park = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name
@@ -54,6 +55,10 @@ class Buyurtma(AsosiyModel):
     sorov = models.BooleanField(default=False)
     tasdiq = models.BooleanField(default=False)
     rad = models.BooleanField(default=False)
+    prorektor = models.BooleanField(default=False)
+    bugalter = models.BooleanField(default=False)
+    xojalik_bolimi = models.BooleanField(default=False)
+    it_park = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username   
