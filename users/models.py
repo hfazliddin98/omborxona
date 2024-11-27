@@ -12,7 +12,6 @@ class Users(AbstractUser):
     it_park = models.BooleanField(default=False)
     omborchi = models.BooleanField(default=False)
     komendant = models.BooleanField(default=False)
-    qr_code = models.CharField(max_length=300, blank=True)
     parol = models.CharField(max_length=255, blank=True)
 
 
