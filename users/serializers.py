@@ -1,21 +1,23 @@
 import qrcode
+from asosiy.settings import DOMEN
 from rest_framework import serializers
 from .models import Users
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ['id', 'username','first_name', 'last_name', 'password', 'name', 'superadmin', 'prorektor', 'bugalter', 'xojalik_bolimi', 'it_park', 'omborchi', 'komendant', 'parol']
+        fields = ['id', 'username','first_name', 'last_name', 'password', 'name', 'superadmin', 'prorektor', 'bugalter', 'xojalik_bolimi', 'it_park', 'omborchi', 'komendant', 'qr_code', 'parol']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        data = f"https://ombor.kspi.uz/user/{validated_data['username']}/"
+        user_id = validated_data['username']
+        data = f"https://ombor.kspi.uz/user/{user_id}/"
         qr = qrcode.QRCode(version=1, box_size=10, border=4)
         qr.add_data(data)
         qr.make()
         img = qr.make_image()
-        # img.save(f"media/user_qrcode/{validated_data['username']}.png")
-        # link = f'http://ombor.kspi.uz/media/user_qrcode/{validated_data['username']}.png'
+        img.save(f"media/qr_code/{user_id}.png")
+        link = f'http://{DOMEN}/media/qr_code/{user_id}.png'
         user = Users(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
@@ -31,6 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
             parol=validated_data['password'],  # Shifrlanmagan holda saqlanadi
         )
         user.set_password(validated_data['password'])  # Parolni shifrlash
-        user.qr_code = img
+        user.qr_code = link
         user.save()
         return user
