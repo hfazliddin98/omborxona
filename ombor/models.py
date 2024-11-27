@@ -82,3 +82,11 @@ class OlinganMaxsulotlar(AsosiyModel):
 
     def __str__(self):
         return self.maxsulot.name
+    
+class Talabnoma(AsosiyModel):
+    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
+    talabnoma_pdf = models.FileField(upload_to='talabnoma_pdf')
+    talabnoma_pdf_link = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.buyurtma

@@ -23,3 +23,9 @@ class AsosiyModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class UserQrCode(AsosiyModel):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    qr_code = models.ImageField(upload_to='user_qrcode')
+    qr_code_link = models.CharField(max_length=255)

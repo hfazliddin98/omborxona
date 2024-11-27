@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.db.models import Sum
 from decimal import Decimal
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot
+from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma
 
 class KategoriyaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,10 +49,6 @@ class BuyurtmaSearchSerializer(serializers.ModelSerializer):
         model = Buyurtma
         fields = '__all__'
 
-# class JamiMahsulotSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = JamiMahsulot
-#         fields = '__all__'
 
 class JamiMahsulotSerializer(serializers.ModelSerializer):
     yakuniy_qiymat = serializers.SerializerMethodField()
@@ -68,3 +64,10 @@ class JamiMahsulotSerializer(serializers.ModelSerializer):
         ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0
         return Decimal(obj.qiymat) - Decimal(olingan_jami_qiymat)
 
+
+class TalabnomaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Talabnoma
+        fields = '__all__'
+
+    
