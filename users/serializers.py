@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
         qr.make()
         img = qr.make_image()
         img.save(f"media/qr_code/{user_id}.png")
-        link = f'http://{DOMEN}/media/qr_code/{user_id}.png'
+        link = f'https://{DOMEN}/media/qr_code/{user_id}.png'
         user = Users(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
