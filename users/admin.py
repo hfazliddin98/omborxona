@@ -10,7 +10,7 @@ class UserAdmin(admin.ModelAdmin):
         'last_name',
         'parol',
         'superadmin',
-        'admin',
+        'omborchi',
         'komendant',
         'is_superuser'
     ]

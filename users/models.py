@@ -6,8 +6,13 @@ from django.contrib.auth.models import AbstractUser
 class Users(AbstractUser):
     name = models.CharField(max_length=255, blank=True)
     superadmin = models.BooleanField(default=False)
-    admin = models.BooleanField(default=False)
+    prorektor = models.BooleanField(default=False)
+    bugalter = models.BooleanField(default=False)
+    xojalik_bolimi = models.BooleanField(default=False)
+    it_park = models.BooleanField(default=False)
+    omborchi = models.BooleanField(default=False)
     komendant = models.BooleanField(default=False)
+    qr_code = models.FileField(upload_to='user_qrcode')
     parol = models.CharField(max_length=255, blank=True)
 
 
