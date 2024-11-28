@@ -12,6 +12,7 @@ class Users(AbstractUser):
     it_park = models.BooleanField(default=False)
     omborchi = models.BooleanField(default=False)
     komendant = models.BooleanField(default=False)
+    qr_code = models.ImageField(upload_to='qr_code', null=True)
     parol = models.CharField(max_length=255, blank=True)
 
 
@@ -25,7 +26,4 @@ class AsosiyModel(models.Model):
         abstract = True
 
 
-class UserQrCode(AsosiyModel):
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    qr_code = models.ImageField(upload_to='user_qrcode')
-    qr_code_link = models.CharField(max_length=255)
+

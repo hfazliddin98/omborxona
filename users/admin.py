@@ -15,5 +15,4 @@ class UserAdmin(admin.ModelAdmin):
         'is_superuser'
     ]
 
-
 admin.site.unregister(Group)
