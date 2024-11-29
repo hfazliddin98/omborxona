@@ -83,6 +83,16 @@ class OlinganMaxsulotlar(AsosiyModel):
     def __str__(self):
         return self.maxsulot.name
     
+class RadEtilganMaxsulotlar(AsosiyModel):
+    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
+    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
+    qiymat = models.DecimalField(max_digits=10, decimal_places=2) 
+    birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)
+    active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.maxsulot.name
+    
 class Talabnoma(AsosiyModel):
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
     talabnoma_pdf = models.FileField(upload_to='talabnoma_pdf')

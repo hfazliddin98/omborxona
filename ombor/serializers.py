@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.db.models import Sum
 from decimal import Decimal
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma
+from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulotlar
 
 class KategoriyaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,6 +42,11 @@ class KorzinkaSerializer(serializers.ModelSerializer):
 class OlinganMaxsulotlarSerializer(serializers.ModelSerializer):
     class Meta:
         model = OlinganMaxsulotlar
+        fields = '__all__'
+
+class RadEtilganMaxsulotlarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RadEtilganMaxsulotlar
         fields = '__all__'
 
 class BuyurtmaSearchSerializer(serializers.ModelSerializer):

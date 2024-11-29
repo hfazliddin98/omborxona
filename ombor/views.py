@@ -3,11 +3,11 @@ from rest_framework import filters
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma
+from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulotlar
 from .serializers import KategoriyaSerializer, MaxsulotSerializer, KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer, OmborSerializer
 from .serializers import OlinganMaxsulotlarSerializer, BuyurtmaSerializer, BuyurtmaSearchSerializer
-from .serializers import JamiMahsulotSerializer, TalabnomaSerializer
+from .serializers import JamiMahsulotSerializer, TalabnomaSerializer, RadEtilganMaxsulotlarSerializer
 
 
 class KategoriyaViewSet(ModelViewSet):
@@ -42,6 +42,10 @@ class KorzinkaViewSet(ModelViewSet):
 class OlinganMaxsulotlarViewSet(ModelViewSet):
     queryset = OlinganMaxsulotlar.objects.all()
     serializer_class = OlinganMaxsulotlarSerializer
+
+class RadEtilganMaxsulotlarViewSet(ModelViewSet):
+    queryset = RadEtilganMaxsulotlar.objects.all()
+    serializer_class = RadEtilganMaxsulotlarSerializer
 
 class JamiMahsulotViewSet(ModelViewSet):
     queryset = JamiMahsulot.objects.all()
