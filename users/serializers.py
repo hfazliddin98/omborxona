@@ -24,8 +24,8 @@ class UserSerializer(serializers.ModelSerializer):
         user = Users(**validated_data)
 
         if password:
-            user.parol(password)
             user.set_password(password)  # Parolni shifrlash
+            user.parol = password
         user.save()
 
         # QR kodni yaratish
@@ -39,8 +39,8 @@ class UserSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
 
         if password:
-            instance.parol(password)
             instance.set_password(password)  # Parolni shifrlash
+            instance.parol = password
 
         instance.save()
 
