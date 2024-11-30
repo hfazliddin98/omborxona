@@ -5,14 +5,13 @@ from users.models import Users
 @admin.register(Users)
 class UserAdmin(admin.ModelAdmin):
     list_display  = [
-        'username',
-        'first_name',
-        'last_name',
-        'parol',
-        'superadmin',
-        'omborchi',
+        'username', 'first_name', 'last_name',
+        'parol', 'is_superuser', 'is_active'
+    ]
+    list_filter = [
+        'superadmin', 'prorektor', 'bugalter', 
+        'xojalik_bolimi', 'it_park', 'omborchi', 
         'komendant',
-        'is_superuser'
     ]
 
 admin.site.unregister(Group)
