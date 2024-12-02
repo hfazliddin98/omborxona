@@ -4,6 +4,8 @@ from .views import KategoriyaViewSet, MaxsulotViewSet, BirlikViewSet, OmborniYop
 from .views import KorzinkaViewSet, OlinganMaxsulotlarViewSet, BuyurtmaViewSet, BuyurtmaSearchView
 from .views import JamiMahsulotViewSet, RadEtilganMaxsulotlarViewSet
 
+from .views import TalabnomaListAPIView
+
 
 router = SimpleRouter()
 router.register(r'kategoriya', KategoriyaViewSet, basename='kategoriya')
@@ -20,6 +22,6 @@ router.register(r'jami_maxsulotlar', JamiMahsulotViewSet, basename='jami_maxsulo
 
 urlpatterns = [
     path('buyurtma_search/', BuyurtmaSearchView.as_view(), name='buyurtma_search'),
-    # path('jami_maxsulotlar/', JamiMahsulotListAPIView.as_view(), name='jami_maxsulotlar')
+    path('talabnoma/<str:pk>/', TalabnomaListAPIView.as_view(), name='talabnoma')
 ]
 urlpatterns += router.urls

@@ -53,12 +53,17 @@ class Buyurtma(AsosiyModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
     sorov = models.BooleanField(default=False)
-    tasdiq = models.BooleanField(default=False)
-    rad = models.BooleanField(default=False)
     prorektor = models.BooleanField(default=False)
     bugalter = models.BooleanField(default=False)
     xojalik_bolimi = models.BooleanField(default=False)
     it_park = models.BooleanField(default=False)
+    omborchi = models.BooleanField(default=False)
+    prorektor_izoh = models.CharField(max_length=255, blank=True)
+    bugalter_izoh = models.CharField(max_length=255, blank=True)
+    xojalik_bolimi_izoh = models.CharField(max_length=255, blank=True)
+    it_park_izoh = models.CharField(max_length=255, blank=True)
+    omborchi_izoh = models.CharField(max_length=255, blank=True)
+
 
     def __str__(self):
         return self.user.username   
