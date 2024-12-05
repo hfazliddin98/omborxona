@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka, JamiMahsulot
-from .models import OlinganMaxsulotlar, Buyurtma, RadEtilganMaxsulotlar
+from .models import OlinganMaxsulotlar, Buyurtma, RadEtilganMaxsulotlar, Talabnoma
 
 
 @admin.register(Kategoriya)
@@ -52,4 +52,9 @@ class OlinganMaxsulotlarAdmin(admin.ModelAdmin):
 class RadEtilganMaxsulotlarAdmin(admin.ModelAdmin):
     list_display  = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
     list_filter = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
+
+@admin.register(Talabnoma)
+class TalabnomaAdmin(admin.ModelAdmin):
+    list_display  = ['buyurtma']
+    list_filter = ['buyurtma']
 

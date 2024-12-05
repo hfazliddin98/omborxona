@@ -1,0 +1,393 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shartnoma</title>
+    <link rel="icon" type="image/x-icon" href="{% static '/img/kspi-logo.png' %}">
+</head>
+<body>
+    
+    <div style="max-width: 21cm; margin-left:0.7cm;margin-right:0.3cm;">
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:center;text-indent:10.2pt;'>
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                O'ZBEKISTON RESPUBLIKASI OLIY TA'LIM, FAN VA INNOVATSIYALAR VAZIRLIGI  
+                QO'QON DAVLAT PEDAGOGIKA INSTITUTI
+            </strong>
+        </p>
+        <p style='margin-top:2pt;margin-bottom:15pt;font-size:12px;font-family:"Times New Roman",serif;text-align:center;text-indent:10.2pt;'>
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                MALAKA AMALIYOTINI O'TASH TO'G'RISIDA <br>
+                SHARTNOMA {{shartnomalar.shartnoma_nomer.nomer}}
+            </strong>
+        </p>
+
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:right;text-indent:10.2pt;'>
+            {{hozir}}
+        </p>
+
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+            O'zbekiston Respublikasi Prezidentining 2017-yil 27-iyuldagi PQ-3151-sonli, 2018-yil 5-iyundagi PQ-3775-sonli,
+            2021-yil 24-dekabrdagi PQ-60-son qarorlari va O'zbekiston Respublikasi Prezidenti Administratsiyasining 2022-yil
+            15-martdagi 04-593-sonli topshiriqlari ijrosi yuzasidan O'zbekiston Respublikasi Oliy ta’lim, fan va innovatsiyalar vazirligining 
+            2022-yil 13-iyundagi 202-sonli buyrug'i asosida ishlab chiqilgan va tasdiqlangan Oliy ta'lim muassasalari
+            talabalarining malaka amaliyotini o'tash tartibi to'g'risidagi namunaviy Nizomga asosan bitiruvchilarni malaka
+            amaliyotini o'tkazish va ularni kelgusidagi ishga joylashishiga ko'maklashish maqsadida Qo'qon davlat pedagogika
+            instituti (keyingi o'rinlarda “QDPI” deb yuritiladi) nomidan ta'lim muassasasi Ustavi hamda Talabalarining malaka
+            amaliyotini o'tash tartibi to'g'risidagi Nizomiga asoslanib ish yurituvchi rektor <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'> {{shartnomalar.oliy_talim.rektor_fish}}</strong> 
+            bir tomondan, ish beruvchi Ustaviga asoslanib <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>{{shartnomalar.muassasa_nomi}}</strong> nomidan <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>{{shartnomalar.rahbari_fish}}</strong> 
+            ikkinchi tomondan, (keyingi o'rinlarda <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>“Qabul qiluvchi muassasa”</strong> deb yuritiladi) va oliy ta'lim muassasasi 
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>{{shartnomalar.user.fakultet}}</strong> fakulteti <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>{{shartnomalar.user.yonalish}}</strong> ta'lim yo'nalishi talabasi 
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>{{shartnomalar.user.last_name}} {{shartnomalar.user.first_name}} {{shartnomalar.user.sharif}}</strong> (keyingi o'rinlarda <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>“Amaliyotchi-talaba”</strong> deb yuritiladi) uchinchi tomondan 
+            ushbu shartnomani quyidagilar haqida tuzdilar.
+        </p>
+
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:center;text-indent:10.2pt;'>
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+            1. SHARTNOMANING PREDMETI
+            </strong>
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:14.2pt;'>
+            O'zbekiston Respublikasi Oliy ta’lim, fan va innovatsiyalar vazirligining 2022 yil 13-iyundagi “Oliy ta'lim muassasalari
+            talabalarining malaka amaliyotini o'tash tartibini takomillashtirish to'g'risida”gi 202-sonli buyrug'i ijrosini ta'minlash
+            maqsadida amalyotchi-talabani malaka amaliyotini o'tashi, oliy ma'lumotga ega bo'lgan yosh mutaxassis
+            (bakalavr)larning intellektual salohiyatidan unumli foydalanish va ularni ish bilan ta'minlashga ko'maklashish.
+
+        </p>
+
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:center;text-indent:10.2pt;'>
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                2. TOMONLARNING MAJBURIYATLAR
+            </strong>
+           
+        </p>
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                2.1. QDPI:
+            </strong>
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotini o'tash joylariga talabalarni taqsimlashda ishtirok etish;
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotiga ketayotgan talabalarga oldindan malaka amaliyoti o'tkazish tartiblari, xavfsizlik texnikasi 
+            haqida zarur ko'rsatmalar va yo'l-yo'riqlar ko'rsatish;
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - zaruriyatga muvofiq Qabul qiluvchi tashkilotga malaka amaliyoti boshlanishidan oldin borib, talabalar kelishiga
+            zaruriy tayyorgarlik ishlarini tashkil etish;
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotining butun davri uchun talabalarga malaka amaliyoti dasturi asosida reja-jadvalini tuzish, qabul
+            qiluvchi tashkilotdan malaka amaliyoti rahbari bilan birgalikda ishning hajmi va tarkibini belgilash;
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - talabalarni malaka amaliyoti reja-jadvali va dasturi bilan ta'minlash;
+        </p>
+            
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - talabalarning malaka amaliyoti o'tash joyiga yetib borishi va qaytishini nazorat qilish;
+        </p>
+        
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - qabul qiluvchi tashkilotdan malaka amaliyoti rahbari bilan talabaning malaka amaliyotini o'tashi holati bo'yicha 
+            muntazam ravishda aloqada bo'lish;
+        </p> 
+            
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyoti muddatlariga rioya qilinishini, shuningdek, malaka amaliyoti reja-jadvali va dasturi bajarilishini
+            hamda kundalikni har kunlik to'ldirishini nazoratini olib borish, uslubiy yordam ko'rsatish ishlarini, zarur hollarda, 
+            talabalarning malaka amaliyoti o'tash joylariga borib ko'rish yo'li bilan amalga oshirish;
+        </p>   
+            
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - talabalarning malaka amaliyoti hisobotini yozishga ko'rsatma va tavsiyalar berish;
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - talabalarning malaka amaliyoti bo'yicha hisobot himoyasida ishtirok etish va baholash;
+        </p>  
+            
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>    
+            - malaka amaliyotini o'tashni takomillashtirish yuzasidan zarur hollarda o'z taklif va mulohazalarini kafedra mudiriga
+            (fakultet va oliy ta'lim muassasasi Kengashida ko'rib chiqish uchun) taqdim etish;
+        </p>  
+
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - professor-o'qituvchining malaka amaliyotiga rahbarlik qilganligi oliy ta'lim muassasasi rektorining malaka 
+            amaliyoti o'tash bo'yicha buyrug'i, talabaning malaka amaliyoti kundaligi, hisoboti va malaka amaliyoti uchun baho qo'yilgan
+            tegishli qaydnomalar asosida aniqlanadi.
+        </p>  
+
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                2.2. “QABUL QILUVCHI MUASSASA”:
+            </strong>
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - oliy ta'lim muassasalari bilan talabalar malaka amaliyotini o'tashi to'g'risida shartnomalar tuzadi;
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotini o'tash davrida talabalarga amaliyotchi maqomini beradi;
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotini tashkil etishga ko'maklashadi, malakali va tajribali mutaxassislar orasidan amaliyotchi bilan
+            ishlash ko'nikmasiga ega bo'lgan malaka amaliyoti rahbarini tayinlaydi;
+        </p>
+
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - amaliyotchilar uchun ish joyi va amaliyot davrida foydalanish uchun zaruriy materiallar ajratilishini tashkil etadi,
+            faoliyati doirasida amaliyotchi talabalarga oylik maoshlar belgilashi mumkin;
+
+        </p>
+
+        
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - amaliyotchiga biriktirilgan mas'ul xodimlarni moliyaviy imkoniyatlardan kelib chiqib moddiy rag'batlantirish
+            ishlarini yo'lga qo'yadi;
+        </p>
+
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - hayot faoliyati va texnika xavfsizligi bo'yicha zaruriy ko'rsatmalar beradi, zarur bo'lgan hollarda talabalarga
+            mehnatning xavfsiz usullarini o'rgatadi va bu haqda tegishli hujjatlami rasmiylashtiradi;
+        </p>
+
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyoti dasturiga muvofiq talabalarga joriy qilinadigan shart-sharoitlar (shaxsiy himoya vositalari, maxsus
+            ovqat va boshqalar)ni yaratadi;
+        </p>
+
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - talabalarga mavjud adabiyotlar, texnik va boshqa hujjatlardan foydalanish imkoniyatlarini beradi; 
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyoti dasturiga muvofiq talabalar malaka amaliyoti o'tkazishining samaradorligini ta'minlovchi ish
+            joylari sharoitini ta'minlaydi;
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - amaliyotchiga malaka amaliyoti davri davomida moliyaviy imkoniyat doirasida ish haqi to'lanadigan lavozimga
+            ishga qabul qilish masalasini hal qiladi;
+
+        </p>
+
+        
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - tashkilotning ichki mehnat intizomini buzgan talaba haqida oliy ta'lim muassasasi rektoriga xabar qiladi;
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - talaba malaka amaliyotini o'tash davrida amaliyot o'tash joyida baxtsiz hodisaga uchragan holatlar bo'yicha 
+            javobgarlik masalalarini qonunchilik hujjatlari asosida ko'rib chiqadi;
+
+        </p>
+
+        
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - shartnoma asosida talabalar yashashi uchun qulay sharoitli vaqtinchalik turar joylar bilan ta'minlashi mumkin.
+        Qabul qiluvchi tashkilot rahbari talaba ta'lim olayotgan yo'nalishi (mutaxassisligi) bo'yicha bo'sh ish joylari mavjud
+        bo'lgan taqdirda, uni vaqtinchalik ish haqi to'lanadigan lavozimga tayinlashi hamda talaba o'qishni bitirgandan so'ng
+        to'liq ish bilan ta'minlashi mumkin.
+        </p>
+
+
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                2.3. “AMALIYOTCHI-TALABA”:
+            </strong>
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotini o'tash joyi, reja-jadvali, dasturi va tartibi bilan oldindan tanishish;
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotini o'tkazish bo'yicla o'z fikr-mulohazalarni bildirish;
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotini o'tash yuzasidan zarur axborotlar olish;
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyoti bo'yicha uslubiy materiallar bilan tanishish hamda malaka amaliyoti rahbarlaridan 
+            yo'l-yo'riqlar olish huquqlariga ega;  
+        </p>
+
+       
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotini uzrli sabablarga ko'ra o'tay olmagan talabalar oliy ta'lim muassasasi rektorining buyrug'iga
+            muvofiq belgilangan boshqa muddatda amaliyotni o'tashi shart;
+        </p>
+
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyoti dasturida nazarda tutilgan barcha topshiriqlami reja-jadvaliga muvofiq to'liq hajmda va
+            sifatli bajarish;
+        </p>
+
+       
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyoti kundaligini har kuni va tartibli yuritish; 
+        </p>
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - oliy ta'lim muassasasi va qabul qiluvchi tashkilotdan tayinlangan malaka amaliyoti rahbarlarining dasturda
+            ko'zda tulilgan ishlarga oid barcha topshiriqlarini bajarish;
+        </p>
+
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - hisobotga tegishli hujjatlami o'z vaqtida rasmiylashtirish;
+        </p>
+
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - qabul qiluvchi tashkilot xodimlari faoliyatini tartibga soluvchi hujjatlar va ichki mehnat tartib-qoidalariga
+            rioya qilish majburiyatlari yuklatiladi.
+        </p>
+
+        
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            - malaka amaliyotini o'tagandan so'ng oliy ta'lim muassasasida malaka amaliyoti bo'yicha hisobotini kafedra yig'ilishi
+        bayoni bilan belgilangan muddatda himoya qiladi.
+
+        </p>
+
+
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:center;text-indent:10.2pt;'>
+            
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                3. TOMONLARNING JAVOBGARLIGI
+            </strong>
+        </p>
+        
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            3.1. Tomonlarning har biri ushbu shartnoma majburiyatlarini bajarmagan taqdirda boshqa tarafga yetkazilgan zararni
+            amaldagi qonunchilikda belgilangan tartibda javobgar bo'ladi.
+        </p>
+
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:center;text-indent:10.2pt;'>
+            
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                4. SHARTNOMANING AMAL QILISH MUDDATI VA UNI BEKOR QILISH TARTIBI
+            </strong>
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            
+            4.1. Taraflardan birining talabi bilan shartnoma quyidagi hollarda bekor qilinishi mumkin:
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            
+            - Amaliyotchi-talabaning malakasi, bilimi ushbu mutaxassis uchun amalda o'rnatilgan davlat ta'lim standartlari
+            talablariga javob bermasa;
+        </p>
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            
+            - Qabul qiluvchi muassasa tegishli hujjatlar asosida tugatilganda; 
+        </p>
+
+
+
+        <p style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:left;text-indent:10.2pt;'>
+            
+            4.2. Ushbu shartnoma tomonlarning barchasi imzolaganidan so'ng kuchga kiradi, hamda shartnoma to'liq bajarilgunga
+            qadar amalda bo'ladi. 
+        </p>
+
+        <p style='margin:0pt;font-size:12px;font-family:"Times New Roman",serif;text-align:center;text-indent:10.2pt;'>
+            
+            <strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>
+                TOMONLARNING MANZILLARI:
+            </strong>
+        </p>
+
+        <table style="width:537.0pt;border-collapse:collapse;border:none;text-align :center; margin-left:auto;margin-right:auto;">
+            <tbody>
+                <tr>
+                    <td><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>"Oliy ta`lim muassasasi" <br> </strong></td>
+                    <td><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>"Qabul qiluvchi muassasa"</strong></td>
+                    <td><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>"Amaliyotchi talaba"</strong></td>                    
+                </tr>
+                <tr>
+                    <td style="text-align: left;">{{shartnomalar.oliy_talim.muassasa_nomi}}</td>
+                    <td style="text-align: left;">{{shartnomalar.muassasa_nomi}}</td>
+                    <td style="text-align: left;">{{shartnomalar.user.last_name}} {{shartnomalar.user.first_name}} {{shartnomalar.user.sharif}}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>Manzil: </strong> {{shartnomalar.oliy_talim.manzil_toliq}}.</td>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>Manzil: </strong> {{shartnomalar.muassasa_manzil}}</td>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>Manzil: </strong> {{shartnomalar.user.manzil}} </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>Telefon: </strong> {{shartnomalar.oliy_talim.tel_nomer}}</td>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>Telefon: </strong> {{shartnomalar.rahbar_tel_nomer}}</td>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>Telefon: </strong> {{shartnomalar.user.tel_nomer}}</td>
+                </tr>
+                <tr>
+                    <td>
+                                                                          
+                        <img height="100px" width="100px" src="{{shartnomalar.rasm.link}}"/>
+                        
+                    </td>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>Imzo: </strong>____________</td>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>Imzo: </strong>____________</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left;"><strong style='margin:0cm;margin-bottom:.0001pt;font-size:12px;font-family:"Times New Roman",serif;text-align:justify;text-indent:10.2pt;'>M.O` </strong></td>
+                    <td style="text-align: left;"></td>
+                </tr>
+            </tbody>
+        </table>   
+
+       
+
+    </div>   
+    
+    
+</body>
+</html>

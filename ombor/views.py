@@ -1,3 +1,11 @@
+import os
+import xlwt
+import qrcode
+import datetime as dt
+from django.http import HttpResponse
+from django.template.loader import get_template
+from rest_framework.decorators import action
+from xhtml2pdf import pisa
 from rest_framework import generics
 from rest_framework import views
 from rest_framework import filters
@@ -52,6 +60,11 @@ class JamiMahsulotViewSet(ModelViewSet):
     queryset = JamiMahsulot.objects.all()
     serializer_class = JamiMahsulotSerializer
 
+class TalabnomaViewSet(ModelViewSet):
+    queryset = Talabnoma.objects.all()
+    serializer_class = TalabnomaSerializer
+
+
 
 
 class BuyurtmaSearchView(generics.ListAPIView):
@@ -61,36 +74,5 @@ class BuyurtmaSearchView(generics.ListAPIView):
     search_fields = ['id']
 
 
-class TalabnomaListAPIView(views.APIView):
-
-    # def pdf_create(request, pk):
-    #     template_path = 'talaba/shartnoma.html' 
-    #     hozir = dt.datetime.now()
-
-    #     context = {
-    #         'shartnomalar':shartnomalar,
-    #         'hozir':hozir,
-    #     }
-    #     response = HttpResponse(content_type='application/pdf')
-    #     response['Content-Disposition'] = 'filename="shartnoma.pdf"'
-    #     #   
 
 
-    #     template = get_template(template_path)
-    #     html = template.render(context)
-
-    #     pisa_status = pisa.CreatePDF(html, dest=response)
-
-    #     if pisa_status.err:
-    #         return HttpResponse("Bizda ba'zi xatolar bor edi " + html + " serverda texnik ish lar olib borilmoqda !!!")
-    #     return response
-
-
-    def get(self, request, pk, format=False):
-        buyurtma = Buyurtma.objects.get(id=pk)
-        if buyurtma.prorektor==True and buyurtma.bugalter==True and buyurtma.omborchi==True and (buyurtma.it_park==True or buyurtma.xojalik_bolimi):
-
-        
-            return Response(buyurtma.id)
-        else:
-            return Response('xato')

@@ -5,6 +5,8 @@ django_bootstrap5
 requests
 pandas
 qrcode
+xlwt
+xhtml2pdf
 django-dbbackup
 django-crontab
 coreschema
