@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from users.models import Users
+from users.models import Users, Binos
 
 @admin.register(Users)
 class UserAdmin(admin.ModelAdmin):
@@ -13,5 +13,12 @@ class UserAdmin(admin.ModelAdmin):
         'xojalik_bolimi', 'it_park', 'omborchi', 
         'komendant',
     ]
+
+@admin.register(Binos)
+class BinosAdmin(admin.ModelAdmin):
+    list_display  = [
+        'name', 
+    ]
+    
 
 admin.site.unregister(Group)

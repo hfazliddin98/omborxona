@@ -3,7 +3,7 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from asosiy.settings import DOMEN
 from rest_framework import serializers
-from .models import Users
+from .models import Users, Binos
 
 
 
@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = [
-            'id', 'username', 'first_name', 'last_name', 'password', 'name',
+            'id', 'username', 'first_name', 'last_name', 'password', 'name', 'bino',
             'superadmin', 'prorektor', 'bugalter', 'xojalik_bolimi', 'it_park',
             'omborchi', 'komendant', 'qr_code', 'parol', 'is_active'
         ]
@@ -68,3 +68,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.qr_code.save(file_name, ContentFile(buffer.read()), save=True)
 
 
+class BinosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Binos
+        fields = '__all__'
