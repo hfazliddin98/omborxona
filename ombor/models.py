@@ -70,7 +70,6 @@ class Buyurtma(AsosiyModel):
     xojalik_bolimi_izoh = models.CharField(max_length=255, blank=True)
     it_park_izoh = models.CharField(max_length=255, blank=True)
     omborchi_izoh = models.CharField(max_length=255, blank=True)
-    izoh = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.user.username   
