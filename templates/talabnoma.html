@@ -7,127 +7,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shartnoma</title>
     <link rel="icon" type="image/x-icon" href="{% static '/img/kspi-logo.png' %}">
-    <style>
-        body {
-            font-family: "Times New Roman", serif;
-            font-size: 16px;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-        p {
-            font-size: 16px;
-            text-indent:10.2pt;
-        }
 
-        .container {
-            max-width: 21cm;
-            margin: 0.7cm 0.3cm;
-        }
-        /* Yuqori bo'lim (prorektorga yo'naltirilgan qismlar) */
-        .header {
-            display: flex;
-            justify-content: space-between;
-        }
-        .header p {
-            text-indent:0pt;
-        }
-        /* Markazlashgan sarlavha */
-        .center-title {
-            text-align: center;
-            font-size: 15px;
-            font-weight: bold;
-            margin: 42pt 0 15pt;
-        }
-        /* Jadval uchun uslublar */
-        table {
-            width: 90%; /* Jadval kengligi */
-            border-collapse: collapse; /* Chegaralarni birlashtirish */
-            margin: 10px auto; /* Jadvalni markazlashtirish */
-             /* Matnni chapga tekislash */
-            font-family: "Times New Roman", serif;
-        }
-        th, td {
-            border: 1px solid #000; /* Har bir hujayra uchun chegara */
-            padding: 10px; /* Ichki bo'shliq */
-        }
-        th {
-            text-align: center; /* Sarlavhani markazlashtirish */
-            background-color: #f2f2f2; /* Sarlavha fon rangi */
-            font-weight: bold;
-        }
-        td {
-            text-align: left;
-            font-size: 14px; /* Matn o'lchami */
-        }
-    </style>
 </head>
-<body>
+<body style="font-family: 'Times New Roman', serif; font-size: 16px; margin: 0; padding: 0; line-height: 1.6;">
     
-    <div class="container">
-
-        <div class="header">
-            <div style="width: 50%;box-sizing: border-box;"></div>
-            <div style="width: 50%;">
-                <p>
-                Qo`qon Davlat Pedagogika Instituti <br> 
-                Moliya va iqdisodiyot ishlari bo`yicha prorektori <br> 
-                {{prorektor}}ga
-                </p>
-            </div>
-        </div>
-
-       
-
-
-
-        <p class="center-title">
-                Talabnoma
+    <div style="max-width: 21cm; margin: 0.7cm 0.3cm;">
+        <p style="margin-left: 11cm; font-size: 16px; text-indent: 0pt;">
+            Qo`qon Davlat Pedagogika Instituti
+            Moliya va iqdisodiyot ishlari bo`yicha prorektori 
+            {{prorektor}}ga {{bino}} komendanti
+            {{komendant}}dan
         </p>
 
-        <p>
-            6.12.2024-yil
+        <p style="font-size: 16px; text-indent:10.2pt; text-align: center; font-size: 15px; font-weight: bold; margin: 42pt 0 15pt;">
+            Talabnoma
         </p>
 
-        <p>
-            Menga institut omboridan 1-o`quv bino uchun quydagilarni berishingizni so`rayman
+        <p style="font-size: 16px; text-indent:10.2pt;">
+            {{sana}}
+        </p>
+
+        <p style="font-size: 16px; text-indent:10.2pt;">
+            Menga institut omboridan {{bino}} uchun quydagilarni berishingizni so`rayman
         </p>
 
 
 
-        <table>
+        <table style="width: 90%; border-collapse: collapse;">
             <tbody>
+
+                {% for m in maxsulotlar %}
                 <tr>
-                    <td style="width: 5%;"><strong >N</strong></td>
-                    <td><strong >"Mahsulot"</strong></td>
-                    <td style="width: 15%;"><strong >"Qiymat"</strong></td>
+                    <td style="text-align: center; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto; width: 6%;" >1</td>
+                    <td style="text-align: left; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto; ">{{m.maxsulot}}</td>
+                    <td style="text-align: center; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto; width: 20%;">{{m.qiymat}} {{m.birlik}}</td>
                 </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>   
+
+
+
+        <table style="width: 90%; border-collapse: collapse;">
+            <tbody>
+
                 <tr>
-                    <td >1</td>
-                    <td>Klaviyatura</td>
-                    <td>20 dona</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Kompyuter</td>
-                    <td>22 dona</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Turba</td>
-                    <td>2 dona</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Korp</td>
-                    <td>30 metr</td>
+                    <td style="text-align: center; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto;" >
+                        {{prorektor}}
+                    </td>
+                    <td style="text-align: left; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto;">
+                        <img src="{{prorektor_qrcode}}">
+                        
+                    </td>
                 </tr>
                 
             </tbody>
         </table>   
 
         
-       
+       <p>{{prorektor_qrcode}}</p>
 
     </div>   
     

@@ -3,6 +3,7 @@ import qrcode
 import datetime as dt
 from django.core.files.base import ContentFile
 from django.template.loader import get_template
+from asosiy.settings import DOMEN
 from xhtml2pdf import pisa
 from django.db import models
 from decimal import Decimal
@@ -19,6 +20,7 @@ class Maxsulot(AsosiyModel):
     kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     maxviylik = models.BooleanField(default=False)
+    rasm = models.ImageField(upload_to='maxsulot', null=True)
     it_park = models.BooleanField(default=False)
     
     def __str__(self):
@@ -118,12 +120,24 @@ class Talabnoma(models.Model):
 
         # Template yo‘lini ko‘rsatish
         template_path = 'talabnoma.html'
-        hozir = dt.datetime.now()
+
+        # malumotlarni chaqirish
+        maxsulotlar = OlinganMaxsulotlar.objects.filter(buyurtma=buyurtma)
+        prorektor_data = Users.objects.filter(prorektor=True).first()
+        prorektor = f'{prorektor_data.last_name} {prorektor_data.first_name}'
+        prorektor_qrcode = f'https://{DOMEN}/media/{prorektor_data.qr_code}'
+        komendant = f'{buyurtma.user.last_name} {buyurtma.user.first_name}'
+        bino = f'{buyurtma.user.bino}'
+        sana = buyurtma.created_at
 
         # Kontekst tayyorlash
         context = {
-            'shartnomalar': buyurtma,
-            'hozir': hozir,
+            'maxsulotlar': maxsulotlar,
+            'prorektor': prorektor,
+            'prorektor_qrcode': prorektor_qrcode,
+            'komendant': komendant,
+            'bino': bino,
+            'sana': sana,
         }
 
         # Template-ni yuklab, HTML hosil qilish
@@ -136,7 +150,7 @@ class Talabnoma(models.Model):
 
         if not pisa_status.err:
             # Fayl nomini yaratish
-            pdf_name = f"talabnoma_{self.buyurtma.id}_{hozir.strftime('%Y%m%d%H%M%S')}.pdf"
+            pdf_name = f"talabnoma_{self.buyurtma.id}_{sana.strftime('%Y%m%d%H%M%S')}.pdf"
             
             # Faylni saqlash uchun FileField-dan foydalanish
             self.talabnoma_pdf.save(pdf_name, ContentFile(pdf_buffer.getvalue()), save=False)
