@@ -125,7 +125,7 @@ class Talabnoma(models.Model):
         maxsulotlar = OlinganMaxsulotlar.objects.filter(buyurtma=buyurtma)
         prorektor_data = Users.objects.filter(prorektor=True).first()
         prorektor = f'{prorektor_data.last_name} {prorektor_data.first_name}'
-        prorektor_qrcode = f'https://{DOMEN}/media/{prorektor_data.qr_code}'
+        prorektor_qrcode = f'https://{DOMEN}{prorektor_data.qr_code.url}'
         komendant = f'{buyurtma.user.last_name} {buyurtma.user.first_name}'
         bino = f'{buyurtma.user.bino}'
         sana = buyurtma.created_at
