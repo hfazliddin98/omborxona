@@ -67,6 +67,10 @@ class UserSerializer(serializers.ModelSerializer):
         # QR kodni foydalanuvchi modeli bilan saqlash
         user.qr_code.save(file_name, ContentFile(buffer.read()), save=True)
 
+        # QR kod uchun linkni saqlash
+        user.qr_code_link = f"https://{DOMEN}{user.qr_code.url}"
+        user.save()
+
 
 class BinosSerializer(serializers.ModelSerializer):
     class Meta:

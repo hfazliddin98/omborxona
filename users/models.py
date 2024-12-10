@@ -31,5 +31,6 @@ class Users(AbstractUser):
     omborchi = models.BooleanField(default=False)
     komendant = models.BooleanField(default=False)
     qr_code = models.ImageField(upload_to='qr_code', null=True)
+    qr_code_link = models.URLField(max_length=255, blank=True)
     parol = models.CharField(max_length=255, blank=True)
 
