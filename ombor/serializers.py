@@ -75,4 +75,5 @@ class TalabnomaSerializer(serializers.ModelSerializer):
         model = Talabnoma
         fields = '__all__'
 
+
     

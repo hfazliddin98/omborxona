@@ -48,25 +48,40 @@
         </table>   
 
 
+ 
+        <p style="align-items: center;">
+            <strong>Moliya va iqdisodiyot ishlari bo`yicha prorektori : </strong>
+            {{prorektor}} 
+            <img src="{{prorektor_data.qr_code_link}}" width="40" height="40">
+        </p>
 
-        <table style="width: 90%; border-collapse: collapse;">
-            <tbody>
-
-                <tr>
-                    <td style="text-align: center; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto;" >
-                        {{prorektor}}
-                    </td>
-                    <td style="text-align: left; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto;">
-                        <img src="{{prorektor_qrcode}}" width="200" height="200">
-                        
-                    </td>
-                </tr>
-                
-            </tbody>
-        </table>   
-        <a href="{{prorektor_qrcode}}">salom</a>
+        <p style="align-items: center;">
+            <strong>Bugalter : </strong>
+            {{bugalter.last_name}}  {{bugalter.first_name}}
+            <img src="{{bugalter.qr_code_link}}" width="40" height="40">
+        </p>
         
-       <p>{{prorektor_qrcode}}</p>
+        {% if xojalik_bolimi %}
+            <p style="align-items: center;">
+                <strong>Xo`jalik bo`limi : </strong>
+                {{xojalik_bolimi.last_name}}  {{xojalik_bolimi.first_name}}
+                <img src="{{xojalik_bolimi.qr_code_link}}" width="40" height="40">
+            </p>
+        {% endif %}
+
+        {% if it_park %}
+            <p style="align-items: center;">
+                <strong>IT Park : </strong>
+                {{it_park.last_name}}  {{it_park.first_name}}
+                <img src="{{it_park.qr_code_link}}" width="40" height="40">
+            </p>
+        {% endif %}
+        
+        <p style="align-items: center;">
+            <strong>Omborchi : </strong>
+            {{omborchi.last_name}}  {{omborchi.first_name}}
+            <img src="{{omborchi.qr_code_link}}" width="40" height="40">
+        </p>
 
     </div>   
     

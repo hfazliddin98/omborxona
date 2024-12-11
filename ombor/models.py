@@ -125,7 +125,11 @@ class Talabnoma(models.Model):
         maxsulotlar = OlinganMaxsulotlar.objects.filter(buyurtma=buyurtma)
         prorektor_data = Users.objects.filter(prorektor=True).first()
         prorektor = f'{prorektor_data.last_name} {prorektor_data.first_name}'
-        prorektor_qrcode = f'{prorektor_data.qr_code_link}'
+        prorektor_qrcode = prorektor_data.qr_code_link
+        bugalter = Users.objects.filter(bugalter=True).first()
+        xojalik_bolimi = Users.objects.filter(xojalik_bolimi=True).first()
+        it_park = Users.objects.filter(it_park=True).first()
+        omborchi = Users.objects.filter(omborchi=True).first()
         komendant = f'{buyurtma.user.last_name} {buyurtma.user.first_name}'
         bino = f'{buyurtma.user.bino}'
         sana = buyurtma.created_at
@@ -134,7 +138,12 @@ class Talabnoma(models.Model):
         context = {
             'maxsulotlar': maxsulotlar,
             'prorektor': prorektor,
+            'prorektor_data': prorektor_data,
             'prorektor_qrcode': prorektor_qrcode,
+            'bugalter': bugalter,
+            'xojalik_bolimi': xojalik_bolimi,
+            'it_park': it_park,
+            'omborchi': omborchi,
             'komendant': komendant,
             'bino': bino,
             'sana': sana,

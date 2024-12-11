@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'username', 'first_name', 'last_name', 'password', 'name', 'bino',
             'superadmin', 'prorektor', 'bugalter', 'xojalik_bolimi', 'it_park',
-            'omborchi', 'komendant', 'qr_code', 'parol', 'is_active'
+            'omborchi', 'komendant', 'qr_code', 'qr_code_link', 'parol', 'is_active'
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
