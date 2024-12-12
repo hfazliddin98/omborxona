@@ -15,7 +15,7 @@
         <p style="margin-left: 11cm; font-size: 16px; text-indent: 0pt;">
             Qo`qon Davlat Pedagogika Instituti
             Moliya va iqdisodiyot ishlari bo`yicha prorektori 
-            {{prorektor}}ga {{bino}} komendanti
+            {{prorektor.last_name}} {{prorektor.first_name}}ga {{bino}} komendanti
             {{komendant}}dan
         </p>
 
@@ -50,37 +50,41 @@
 
  
         <p style="align-items: center;">
+            <img src="{{prorektor.qr_code_link}}" width="40" height="40">
             <strong>Moliya va iqdisodiyot ishlari bo`yicha prorektori : </strong>
-            {{prorektor}} 
-            <img src="{{prorektor_data.qr_code_link}}" width="40" height="40">
+            {{prorektor.last_name}} {{prorektor.first_name}}
         </p>
 
         <p style="align-items: center;">
+            <img src="{{bugalter.qr_code_link}}" width="40" height="40">
             <strong>Bugalter : </strong>
             {{bugalter.last_name}}  {{bugalter.first_name}}
-            <img src="{{bugalter.qr_code_link}}" width="40" height="40">
         </p>
         
         {% if xojalik_bolimi %}
             <p style="align-items: center;">
+                <img src="{{xojalik_bolimi.qr_code_link}}" width="40" height="40">
                 <strong>Xo`jalik bo`limi : </strong>
                 {{xojalik_bolimi.last_name}}  {{xojalik_bolimi.first_name}}
-                <img src="{{xojalik_bolimi.qr_code_link}}" width="40" height="40">
             </p>
         {% endif %}
 
         {% if it_park %}
             <p style="align-items: center;">
+                <img src="{{it_park.qr_code_link}}" width="40" height="40">
                 <strong>IT Park : </strong>
                 {{it_park.last_name}}  {{it_park.first_name}}
-                <img src="{{it_park.qr_code_link}}" width="40" height="40">
             </p>
         {% endif %}
         
         <p style="align-items: center;">
+            <img src="{{omborchi.qr_code_link}}" width="40" height="40">
             <strong>Omborchi : </strong>
             {{omborchi.last_name}}  {{omborchi.first_name}}
-            <img src="{{omborchi.qr_code_link}}" width="40" height="40">
+        </p>
+        
+        <p style="align-items: center;">
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code"  width="100" height="100" />
         </p>
 
     </div>   

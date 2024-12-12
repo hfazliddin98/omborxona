@@ -1,5 +1,7 @@
 import os, io
+import base64
 import qrcode
+from io import BytesIO
 import datetime as dt
 from django.core.files.base import ContentFile
 from django.template.loader import get_template
@@ -123,9 +125,9 @@ class Talabnoma(models.Model):
 
         # malumotlarni chaqirish
         maxsulotlar = OlinganMaxsulotlar.objects.filter(buyurtma=buyurtma)
-        prorektor_data = Users.objects.filter(prorektor=True).first()
-        prorektor = f'{prorektor_data.last_name} {prorektor_data.first_name}'
-        prorektor_qrcode = prorektor_data.qr_code_link
+        prorektor = Users.objects.filter(prorektor=True).first()
+        # prorektor = f'{prorektor_data.last_name} {prorektor_data.first_name}'
+        # prorektor_qrcode = prorektor_data.qr_code_link
         bugalter = Users.objects.filter(bugalter=True).first()
         xojalik_bolimi = Users.objects.filter(xojalik_bolimi=True).first()
         it_park = Users.objects.filter(it_park=True).first()
@@ -134,12 +136,24 @@ class Talabnoma(models.Model):
         bino = f'{buyurtma.user.bino}'
         sana = buyurtma.created_at
 
-        # Kontekst tayyorlash
+        # QR Kod yaratish
+        data = f"https://ombor.kspi.uz/users/{buyurtma.user.username}/"
+        qr = qrcode.QRCode(version=1, box_size=10, border=4)
+        qr.add_data(data)
+        qr.make()
+        img = qr.make_image()
+
+        # QR Kodni Base64 formatiga o‘tkazish
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        qr_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        buffer.close()
+
+        # Kontekstni tayyorlash
         context = {
             'maxsulotlar': maxsulotlar,
             'prorektor': prorektor,
-            'prorektor_data': prorektor_data,
-            'prorektor_qrcode': prorektor_qrcode,
+            # 'prorektor_qrcode': prorektor_qrcode,
             'bugalter': bugalter,
             'xojalik_bolimi': xojalik_bolimi,
             'it_park': it_park,
@@ -147,6 +161,7 @@ class Talabnoma(models.Model):
             'komendant': komendant,
             'bino': bino,
             'sana': sana,
+            'qr_code': qr_base64,  # QR kodni Base64 ko‘rinishida uzatish
         }
 
         # Template-ni yuklab, HTML hosil qilish
