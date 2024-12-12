@@ -126,8 +126,6 @@ class Talabnoma(models.Model):
         # malumotlarni chaqirish
         maxsulotlar = OlinganMaxsulotlar.objects.filter(buyurtma=buyurtma)
         prorektor = Users.objects.filter(prorektor=True).first()
-        # prorektor = f'{prorektor_data.last_name} {prorektor_data.first_name}'
-        # prorektor_qrcode = prorektor_data.qr_code_link
         bugalter = Users.objects.filter(bugalter=True).first()
         xojalik_bolimi = Users.objects.filter(xojalik_bolimi=True).first()
         it_park = Users.objects.filter(it_park=True).first()
@@ -137,7 +135,7 @@ class Talabnoma(models.Model):
         sana = buyurtma.created_at
 
         # QR Kod yaratish
-        data = f"https://ombor.kspi.uz/users/{buyurtma.user.username}/"
+        data = f"https://ombor.kspi.uz/talabnoma/{buyurtma.id}/"
         qr = qrcode.QRCode(version=1, box_size=10, border=4)
         qr.add_data(data)
         qr.make()
@@ -153,7 +151,6 @@ class Talabnoma(models.Model):
         context = {
             'maxsulotlar': maxsulotlar,
             'prorektor': prorektor,
-            # 'prorektor_qrcode': prorektor_qrcode,
             'bugalter': bugalter,
             'xojalik_bolimi': xojalik_bolimi,
             'it_park': it_park,
@@ -161,7 +158,7 @@ class Talabnoma(models.Model):
             'komendant': komendant,
             'bino': bino,
             'sana': sana,
-            'qr_code': qr_base64,  # QR kodni Base64 ko‘rinishida uzatish
+            'qr_code': qr_base64,  
         }
 
         # Template-ni yuklab, HTML hosil qilish
