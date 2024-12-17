@@ -16,7 +16,8 @@ SECRET_KEY = 'django-insecure-v3@ig_hsld#oqrqf4makfzm!a_2ocr553#9vef4$p07iwdo5d#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-DOMEN = 'omborxona2024.pythonanywhere.com'
+# DOMEN = 'omborxona2024.pythonanywhere.com'
+DOMEN = 'apiombor.kspi.uz'
 LOCAL_DOMEN = '127.0.0.1'
 
 ALLOWED_HOSTS = ['.kokanddeveloper.uz', DOMEN, 'localhost', LOCAL_DOMEN]
@@ -101,8 +102,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3001",  # Frontend domaingizni qo'shing
     "http://kspi.uz",     
     "https://kspi.uz",
-    "http://kspiadmin.kspi.uz",     
-    "https://kspiadmin.kspi.uz",
+    "http://omborxona.kspi.uz",     
+    "https://omborxona.kspi.uz",
     "http://omborxona2024.pythonanywhere.com",     
     "https://omborxona2024.pythonanywhere.com",
 ]
@@ -159,6 +160,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'omborxona',
+#         'USER': 'omborxonauser',
+#         'PASSWORD': 'Hfazliddin98',
+#         'HOST': '192.168.0.179',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation

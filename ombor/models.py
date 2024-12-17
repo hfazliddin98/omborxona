@@ -63,6 +63,7 @@ class Buyurtma(AsosiyModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
     sorov = models.BooleanField(default=False)
+    rad = models.BooleanField(default=False)
     maxsulot_it_park = models.BooleanField(default=False)
     prorektor = models.BooleanField(default=False)
     bugalter = models.BooleanField(default=False)
