@@ -100,10 +100,8 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Frontend domaingizni qo'shing
     "http://localhost:3001",  # Frontend domaingizni qo'shing
-    "http://kspi.uz",     
-    "https://kspi.uz",
-    "http://omborxona.kspi.uz",     
-    "https://omborxona.kspi.uz",
+    "http://ombor.kspi.uz",     
+    "https://ombor.kspi.uz",
     "http://omborxona2024.pythonanywhere.com",     
     "https://omborxona2024.pythonanywhere.com",
 ]
