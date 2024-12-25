@@ -7,14 +7,26 @@ from .models import Users, Binos
 
 
 
+class BinosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Binos
+        fields = ['name']
 
-class UserSerializer(serializers.ModelSerializer):
+class UserGetSerializer(serializers.ModelSerializer):
+    bino = BinosSerializer()
     class Meta:
         model = Users
-        fields = [
-            'id', 'username', 'first_name', 'last_name', 'password', 'name', 'bino',
-            'superadmin', 'prorektor', 'bugalter', 'xojalik_bolimi', 'it_park',
-            'omborchi', 'komendant', 'qr_code', 'qr_code_link', 'parol', 'is_active'
+        fields = ['username', 'first_name', 'last_name', 'parol', 'lavozim', 'bino',
+            'role', 'qr_code', 'qr_code_link', 'is_active'
+        ]
+    
+
+
+class UserPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ['username', 'first_name', 'last_name', 'password', 'lavozim', 'bino',
+            'role', 'qr_code', 'qr_code_link', 'is_active'
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -70,9 +82,3 @@ class UserSerializer(serializers.ModelSerializer):
         # QR kod uchun linkni saqlash
         user.qr_code_link = f"https://{DOMEN}{user.qr_code.url}"
         user.save()
-
-
-class BinosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Binos
-        fields = '__all__'

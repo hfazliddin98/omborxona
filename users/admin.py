@@ -6,13 +6,9 @@ from users.models import Users, Binos
 class UserAdmin(admin.ModelAdmin):
     list_display  = [
         'username', 'first_name', 'last_name',
-        'parol', 'is_superuser', 'is_active'
+        'is_superuser', 'is_active'
     ]
-    list_filter = [
-        'superadmin', 'prorektor', 'bugalter', 
-        'xojalik_bolimi', 'it_park', 'omborchi', 
-        'komendant',
-    ]
+
 
 @admin.register(Binos)
 class BinosAdmin(admin.ModelAdmin):

@@ -17,7 +17,7 @@ from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEt
 from .serializers import KategoriyaSerializer, MaxsulotSerializer, KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer, OmborSerializer
 from .serializers import OlinganMaxsulotlarSerializer, BuyurtmaSerializer, BuyurtmaSearchSerializer
-from .serializers import JamiMahsulotSerializer, TalabnomaSerializer, RadEtilganMaxsulotlarSerializer
+from .serializers import JamiMahsulotSerializer, TalabnomaSerializer, RadEtilganMaxsulotlarSerializer, BuyurtmaListSerializer
 
 
 class KategoriyaViewSet(ModelViewSet):
@@ -56,6 +56,20 @@ class BuyurtmaViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['buyurtma']
     filterset_fields = ['user', 'active', 'sorov', 'rad']
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return BuyurtmaListSerializer
+        return super().get_serializer_class()
+
+    def get_queryset(self):
+        role = self.request.user.role
+        qs = super().get_queryset()
+        if self.action == "list":
+            qs = qs.filter(role=role).prefetch_related(
+                "korzinka_set"
+            )
+        return qs
 
 class KorzinkaViewSet(ModelViewSet):
     queryset = Korzinka.objects.all()

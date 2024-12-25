@@ -1,8 +1,13 @@
 from rest_framework import serializers
 from django.db.models import Sum
+from django.contrib.auth import get_user_model
 from decimal import Decimal
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
 from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulotlar
+
+UserModel = get_user_model()
+
+
 
 class KategoriyaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,6 +38,32 @@ class BuyurtmaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Buyurtma
         fields = '__all__'
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ("id", "first_name", "last_name")
+
+class SimpleKorzinkaSerializer(serializers.ModelSerializer):
+    maxsulot = serializers.SerializerMethodField()
+    birlik = serializers.SerializerMethodField()
+    class Meta:
+        model = Korzinka
+        fields = ("id", "maxsulot", "qiymat", "birlik")
+
+    def get_maxsulot(self, korzinka: Korzinka):
+        return korzinka.maxsulot.name
+
+    def get_birlik(self, korzinka: Korzinka):
+        return korzinka.birlik.name
+
+class BuyurtmaListSerializer(serializers.ModelSerializer):
+    user = SimpleUserSerializer()
+    maxsulotlar = SimpleKorzinkaSerializer(many=True, source="korzinka_set")
+
+    class Meta:
+        model = Buyurtma
+        fields = ("id", "user", "maxsulotlar")
 
 class KorzinkaSerializer(serializers.ModelSerializer):
     class Meta:
