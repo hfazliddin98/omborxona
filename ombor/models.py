@@ -26,7 +26,7 @@ class Birlik(AsosiyModel):
         return self.name
 
 class Maxsulot(AsosiyModel):
-    kategoriya = models.ForeignKey(Kategoriya, on_delete=models.CASCADE)
+    kategoriya = models.ForeignKey(Kategoriya, related_name='maxsulot', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     maxsulot_role = models.CharField(max_length=30, choices=MaxsulotRoleChoice.choices, default=MaxsulotRoleChoice.XOJALIK)
     birlik = models.ForeignKey(Birlik, on_delete=models.CASCADE)

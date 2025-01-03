@@ -8,7 +8,7 @@ from ombor import views
 
 router = SimpleRouter()
 router.register(r'kategoriya', views.KategoriyaViewSet, basename='kategoriya')
-router.register(r'mahsulot', views.MaxsulotViewSet, basename='mahsulot')
+router.register(r'maxsulot', views.MaxsulotViewSet, basename='maxsulot')
 router.register(r'birlik', views.BirlikViewSet, basename='birlik')
 router.register(r'omborni_yopish', views.OmborniYopishViewSet, basename='omborni_yopish')
 router.register(r'ombor', views.OmborViewSet, basename='ombor')

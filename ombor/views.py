@@ -15,7 +15,8 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
 from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulotlar
 from .models import KorzinkaMaxsulot
-from .serializers import KategoriyaSerializer, KorzinkaSerializer
+from .serializers import KategoriyaPostSerializer, KategoriyaGetSerializer
+from .serializers import KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer, OmborSerializer
 from .serializers import OlinganMaxsulotlarSerializer, BuyurtmaSearchSerializer
 from .serializers import JamiMahsulotSerializer, TalabnomaSerializer, RadEtilganMaxsulotlarSerializer
@@ -25,9 +26,14 @@ from ombor import models
 
 class KategoriyaViewSet(ModelViewSet):
     queryset = Kategoriya.objects.all()
-    serializer_class = KategoriyaSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
+
+      
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:  # GET uchun
+            return KategoriyaGetSerializer
+        return KategoriyaPostSerializer  # POST, PUT, PATCH uchun
 
 class MaxsulotViewSet(ModelViewSet):
     queryset = Maxsulot.objects.all()

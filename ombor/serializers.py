@@ -9,20 +9,41 @@ from users.serializers import UserGetSerializer
 
 UserModel = get_user_model()
 
-
-
-class KategoriyaSerializer(ModelSerializer):
-    class Meta:
-        model = Kategoriya
-        fields = ['id', 'name']
-
 class BirlikSerializer(ModelSerializer):
     class Meta:
         model = Birlik
         fields = ['id', 'name']
 
+# kategoriya
+
+class KategoriyaMaxsulotSerializer(ModelSerializer):
+    birlik = BirlikSerializer()
+    class Meta:
+        model = Maxsulot
+        fields = ['id', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm']
+
+class KategoriyaGetSerializer(ModelSerializer):
+    maxsulot = KategoriyaMaxsulotSerializer(many=True, read_only=True)
+    class Meta:
+        model = Kategoriya
+        fields = ['id', 'name', 'maxsulot']
+
+class KategoriyaPostSerializer(ModelSerializer):
+
+    class Meta:
+        model = Kategoriya
+        fields = ['id', 'name']
+
+
+# maxsulot
+
+class MaxsulotKategoriyaSerializer(ModelSerializer):
+    class Meta:
+        model = Kategoriya
+        fields = ['id', 'name']
+
 class MaxsulotGetSerializer(ModelSerializer):
-    kategoriya = KategoriyaSerializer()
+    kategoriya = MaxsulotKategoriyaSerializer()
     birlik = BirlikSerializer()
     class Meta:
         model = Maxsulot
@@ -32,6 +53,9 @@ class MaxsulotPostSerializer(ModelSerializer):
     class Meta:
         model = Maxsulot
         fields = ['id', 'kategoriya', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm']
+
+
+# ombor
 
 class OmborniYopishSerializer(ModelSerializer):
     class Meta:
