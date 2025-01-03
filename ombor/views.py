@@ -1,28 +1,19 @@
-import os
-import xlwt
-import qrcode
-import datetime as dt
-from django.http import HttpResponse
-from django.template.loader import get_template
-from rest_framework.decorators import action
-from xhtml2pdf import pisa
 from rest_framework import generics
-from rest_framework import views
 from rest_framework import filters
-from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulotlar
-from .models import KorzinkaMaxsulot
+from .models import OlinganMaxsulot, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulot
+from .models import KorzinkaMaxsulot, BuyurtmaMaxsulot
 from .serializers import KategoriyaPostSerializer, KategoriyaGetSerializer
+from .serializers import MaxsulotGetSerializer, MaxsulotPostSerializer
+from .serializers import BuyurtmaGetSerializer, BuyurtmaPostSerializer, BuyurtmaMaxsulotGetSerializer, BuyurtmaMaxsulotPostSerializer
+from .serializers import KorzinkaMaxsulotGetSerializer, KorzinkaMaxsulotPostSerializer
 from .serializers import KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer, OmborSerializer
-from .serializers import OlinganMaxsulotlarSerializer, BuyurtmaSearchSerializer
-from .serializers import JamiMahsulotSerializer, TalabnomaSerializer, RadEtilganMaxsulotlarSerializer
-from ombor import serializers
-from ombor import models
-
+from .serializers import OlinganMaxsulotGetSerializer, OlinganMaxsulotPostSerializer
+from .serializers import JamiMahsulotSerializer, TalabnomaSerializer
+from .serializers import RadEtilganMaxsulotGetSerializer, RadEtilganMaxsulotPostSerializer
 
 class KategoriyaViewSet(ModelViewSet):
     queryset = Kategoriya.objects.all()
@@ -42,8 +33,8 @@ class MaxsulotViewSet(ModelViewSet):
         
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:  # GET uchun
-            return serializers.MaxsulotGetSerializer
-        return serializers.MaxsulotPostSerializer  # POST, PUT, PATCH uchun
+            return MaxsulotGetSerializer
+        return MaxsulotPostSerializer  # POST, PUT, PATCH uchun
 
 class BirlikViewSet(ModelViewSet):
     queryset = Birlik.objects.all()
@@ -65,7 +56,6 @@ class OmborViewSet(ModelViewSet):
 
 # buyutma
  
-
 class BuyurtmaViewSet(ModelViewSet):
     queryset = Buyurtma.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -73,18 +63,18 @@ class BuyurtmaViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:  # GET uchun
-            return serializers.BuyurtmaGetSerializer
-        return serializers.BuyurtmaPostSerializer  # POST, PUT, PATCH uchun
+            return BuyurtmaGetSerializer
+        return BuyurtmaPostSerializer  # POST, PUT, PATCH uchun
 
 class BuyurtmaMaxsulotViewSet(ModelViewSet):
-    queryset = models.BuyurtmaMaxsulot.objects.all()
+    queryset = BuyurtmaMaxsulot.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['buyurtma', 'maxsulot', 'qiymat']
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:  # GET uchun
-            return serializers.BuyurtmaMaxsulotGetSerializer
-        return serializers.BuyurtmaMaxsulotPostSerializer  # POST, PUT, PATCH uchun
+            return BuyurtmaMaxsulotGetSerializer
+        return BuyurtmaMaxsulotPostSerializer  # POST, PUT, PATCH uchun
 
 
 # korzinka
@@ -104,24 +94,37 @@ class KorzinkaMaxsulotViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:  # GET uchun
-            return serializers.KorzinkaGetMaxsulotSerializer
-        return serializers.KorzinkaPostMaxsulotSerializer  # POST, PUT, PATCH uchun
+            return KorzinkaMaxsulotGetSerializer
+        return KorzinkaMaxsulotPostSerializer # POST, PUT, PATCH uchun
 
     
+# olingan maxsulot
 
-
-
-class OlinganMaxsulotlarViewSet(ModelViewSet):
-    queryset = OlinganMaxsulotlar.objects.all()
-    serializer_class = OlinganMaxsulotlarSerializer
+class OlinganMaxsulotViewSet(ModelViewSet):
+    queryset = OlinganMaxsulot.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['buyurtma', 'maxsulot', 'qiymat']
 
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:  # GET uchun
+            return OlinganMaxsulotGetSerializer
+        return OlinganMaxsulotPostSerializer  # POST, PUT, PATCH uchun
+
+
+# rad etilgan maxsulot 
+
 class RadEtilganMaxsulotlarViewSet(ModelViewSet):
-    queryset = RadEtilganMaxsulotlar.objects.all()
-    serializer_class = RadEtilganMaxsulotlarSerializer
+    queryset = RadEtilganMaxsulot.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['rad_etgan_user', 'buyurtma', 'maxsulot', 'qiymat']
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:  # GET uchun
+            return RadEtilganMaxsulotGetSerializer
+        return RadEtilganMaxsulotPostSerializer  # POST, PUT, PATCH uchun
+
+
+# jami maxsulot
 
 class JamiMahsulotViewSet(ModelViewSet):
     queryset = JamiMahsulot.objects.all()
@@ -138,11 +141,7 @@ class TalabnomaViewSet(ModelViewSet):
 
 
 
-class BuyurtmaSearchView(generics.ListAPIView):
-    queryset = Buyurtma.objects.all()
-    serializer_class = BuyurtmaSearchSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['id']
+
 
 
 

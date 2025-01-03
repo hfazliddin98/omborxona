@@ -3,7 +3,7 @@ from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from decimal import Decimal
 from ombor.models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from ombor.models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulotlar
+from ombor.models import OlinganMaxsulot, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulot
 from ombor.models import BuyurtmaMaxsulot, KorzinkaMaxsulot
 from users.serializers import UserGetSerializer
 
@@ -101,34 +101,50 @@ class KorzinkaSerializer(ModelSerializer):
         fields = ['id', 'komendant_user']
 
 
-class KorzinkaGetMaxsulotSerializer(ModelSerializer):
+class KorzinkaMaxsulotGetSerializer(ModelSerializer):
     korzinka = KorzinkaSerializer()
     maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = KorzinkaMaxsulot
         fields = ['id', 'korzinka', 'maxsulot', 'qiymat', 'sorov']
 
-class KorzinkaPostMaxsulotSerializer(ModelSerializer):
+class KorzinkaMaxsulotPostSerializer(ModelSerializer):
     class Meta:
         model = KorzinkaMaxsulot
         fields = ['id', 'korzinka', 'maxsulot', 'qiymat', 'sorov']
 
+# olingan maxsulot
 
-
-class OlinganMaxsulotlarSerializer(ModelSerializer):
+class OlinganMaxsulotGetSerializer(ModelSerializer):
+    buyurtma = BuyurtmaGetSerializer()
+    maxsulot = MaxsulotGetSerializer()
     class Meta:
-        model = OlinganMaxsulotlar
-        fields = '__all__'
+        model = OlinganMaxsulot
+        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat']
 
-class RadEtilganMaxsulotlarSerializer(ModelSerializer):
-    class Meta:
-        model = RadEtilganMaxsulotlar
-        fields = '__all__'
 
-class BuyurtmaSearchSerializer(ModelSerializer):
+class OlinganMaxsulotPostSerializer(ModelSerializer):
     class Meta:
-        model = Buyurtma
-        fields = '__all__'
+        model = OlinganMaxsulot
+        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat']
+
+
+# rad etilgan maxsulot
+
+class RadEtilganMaxsulotGetSerializer(ModelSerializer):
+    rad_etgan_user = UserGetSerializer()
+    buyurtma = BuyurtmaGetSerializer()
+    maxsulot = MaxsulotGetSerializer()
+    class Meta:
+        model = RadEtilganMaxsulot
+        fields = ['id', 'rad_etgan_user', 'buyurtma', 'maxsulot', 'qiymat']
+
+class RadEtilganMaxsulotPostSerializer(ModelSerializer):
+    class Meta:
+        model = RadEtilganMaxsulot
+        fields = ['id', 'rad_etgan_user', 'buyurtma', 'maxsulot', 'qiymat']
+
+
 
 
 class JamiMahsulotSerializer(ModelSerializer):
@@ -139,7 +155,7 @@ class JamiMahsulotSerializer(ModelSerializer):
         fields = '__all__'
 
     def get_yakuniy_qiymat(self, obj):
-        olingan_jami_qiymat = OlinganMaxsulotlar.objects.filter(
+        olingan_jami_qiymat = OlinganMaxsulot.objects.filter(
             maxsulot=obj.maxsulot,
             active=True
         ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0

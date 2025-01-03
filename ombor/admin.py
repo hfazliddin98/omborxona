@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Kategoriya, Maxsulot, Birlik
 # from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka, JamiMahsulot
-from .models import OlinganMaxsulotlar, Buyurtma, RadEtilganMaxsulotlar, Talabnoma
+from .models import OlinganMaxsulot, Buyurtma, RadEtilganMaxsulot, Talabnoma
 
 
 @admin.register(Kategoriya)
@@ -44,12 +44,12 @@ class BirlikAdmin(admin.ModelAdmin):
 #     list_display  = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
 #     list_filter = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
 
-# @admin.register(OlinganMaxsulotlar)
+# @admin.register(OlinganMaxsulot)
 # class OlinganMaxsulotlarAdmin(admin.ModelAdmin):
 #     list_display  = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
 #     list_filter = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
 
-# @admin.register(RadEtilganMaxsulotlar)
+# @admin.register(RadEtilganMaxsulot)
 # class RadEtilganMaxsulotlarAdmin(admin.ModelAdmin):
 #     list_display  = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
 #     list_filter = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']

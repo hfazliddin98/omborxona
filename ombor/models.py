@@ -96,7 +96,7 @@ class KorzinkaMaxsulot(AsosiyModel):
         return self.maxsulot.name
 
 
-class OlinganMaxsulotlar(AsosiyModel):
+class OlinganMaxsulot(AsosiyModel):
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
     qiymat = models.DecimalField(max_digits=10, decimal_places=2)
@@ -104,7 +104,7 @@ class OlinganMaxsulotlar(AsosiyModel):
     def __str__(self):
         return self.maxsulot.name
     
-class RadEtilganMaxsulotlar(AsosiyModel):
+class RadEtilganMaxsulot(AsosiyModel):
     rad_etgan_user = models.ForeignKey(Users, on_delete=models.CASCADE)
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
