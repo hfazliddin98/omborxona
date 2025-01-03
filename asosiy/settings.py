@@ -43,7 +43,7 @@ INSTALLED_APPS = [
 
     # men qoshgan app
     'ombor',
-    'users'
+    'users',
 ]
 
 MIDDLEWARE = [

@@ -10,24 +10,19 @@ from .models import Users, Binos
 class BinosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Binos
-        fields = ['name']
+        fields = ['id', 'name']
 
 class UserGetSerializer(serializers.ModelSerializer):
     bino = BinosSerializer()
     class Meta:
         model = Users
-        fields = ['username', 'first_name', 'last_name', 'parol', 'lavozim', 'bino',
-            'role', 'qr_code', 'qr_code_link', 'is_active'
-        ]
+        fields = ['id', 'username', 'first_name', 'last_name', 'parol', 'lavozim', 'bino', 'role', 'is_active']
     
-
 
 class UserPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ['username', 'first_name', 'last_name', 'password', 'lavozim', 'bino',
-            'role', 'qr_code', 'qr_code_link', 'is_active'
-        ]
+        fields = ['id', 'username', 'first_name', 'last_name', 'password', 'lavozim', 'bino', 'role', 'is_active']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):

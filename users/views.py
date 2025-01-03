@@ -14,7 +14,7 @@ def bosh_sahifa(request):
 class UserViewSet(ModelViewSet):
     queryset = Users.objects.filter(is_superuser=False)
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['role']
+    filterset_fields = ['username', 'role']
     
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:  # GET uchun

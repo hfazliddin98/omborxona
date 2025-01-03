@@ -1,93 +1,113 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from decimal import Decimal
-from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulotlar
+from ombor.models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
+from ombor.models import OlinganMaxsulotlar, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulotlar
+from ombor.models import BuyurtmaMaxsulot, KorzinkaMaxsulot
+from users.serializers import UserGetSerializer
 
 UserModel = get_user_model()
 
 
 
-class KategoriyaSerializer(serializers.ModelSerializer):
+class KategoriyaSerializer(ModelSerializer):
     class Meta:
         model = Kategoriya
-        fields = '__all__'
+        fields = ['id', 'name']
 
-class MaxsulotSerializer(serializers.ModelSerializer):
+class MaxsulotGetSerializer(ModelSerializer):
+    kategoriya = KategoriyaSerializer()
     class Meta:
         model = Maxsulot
-        fields = '__all__'
+        fields = ['id', 'kategoriya', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm']
 
-class BirlikSerializer(serializers.ModelSerializer):
+class MaxsulotPostSerializer(ModelSerializer):
+    class Meta:
+        model = Maxsulot
+        fields = ['id', 'kategoriya', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm']
+
+class BirlikSerializer(ModelSerializer):
     class Meta:
         model = Birlik
-        fields = '__all__'
+        fields = ['id', 'name']
 
-class OmborniYopishSerializer(serializers.ModelSerializer):
+class OmborniYopishSerializer(ModelSerializer):
     class Meta:
         model = OmborniYopish
-        fields = '__all__'
+        fields = ['id', 'yopish']
 
-class OmborSerializer(serializers.ModelSerializer):
+class OmborSerializer(ModelSerializer):
     class Meta:
         model = Ombor
         fields = '__all__'
 
-class BuyurtmaSerializer(serializers.ModelSerializer):
+# buyurtma
+
+class BuyurtmaGetSerializer(ModelSerializer):
+    komendant_user = UserGetSerializer()
     class Meta:
         model = Buyurtma
-        fields = '__all__'
+        fields = ['id', 'komendant_user', 'buyurtma_role', 'tasdiqlash', 'rad_etish', 'izoh']
 
-class SimpleUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserModel
-        fields = ("id", "first_name", "last_name")
-
-class SimpleKorzinkaSerializer(serializers.ModelSerializer):
-    maxsulot = serializers.SerializerMethodField()
-    birlik = serializers.SerializerMethodField()
-    class Meta:
-        model = Korzinka
-        fields = ("id", "maxsulot", "qiymat", "birlik")
-
-    def get_maxsulot(self, korzinka: Korzinka):
-        return korzinka.maxsulot.name
-
-    def get_birlik(self, korzinka: Korzinka):
-        return korzinka.birlik.name
-
-class BuyurtmaListSerializer(serializers.ModelSerializer):
-    user = SimpleUserSerializer()
-    maxsulotlar = SimpleKorzinkaSerializer(many=True, source="korzinka_set")
-
+class BuyurtmaPostSerializer(ModelSerializer):
     class Meta:
         model = Buyurtma
-        fields = ("id", "user", "maxsulotlar")
+        fields = ['id', 'komendant_user', 'buyurtma_role', 'tasdiqlash', 'rad_etish', 'izoh']
 
-class KorzinkaSerializer(serializers.ModelSerializer):
+class BuyurtmaMaxsulotGetSerializer(ModelSerializer):
+    buyurtma = BuyurtmaGetSerializer()
+    maxsulot = MaxsulotGetSerializer()
+    class Meta:
+        model = BuyurtmaMaxsulot
+        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat']
+
+class BuyurtmaMaxsulotPostSerializer(ModelSerializer):
+    class Meta:
+        model = BuyurtmaMaxsulot
+        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat']
+
+# korzinka
+
+class KorzinkaSerializer(ModelSerializer):
+    komendant_user= UserGetSerializer()
     class Meta:
         model = Korzinka
-        fields = '__all__'
+        fields = ['id', 'komendant_user']
 
-class OlinganMaxsulotlarSerializer(serializers.ModelSerializer):
+
+class KorzinkaGetMaxsulotSerializer(ModelSerializer):
+    korzinka = KorzinkaSerializer()
+    maxsulot = MaxsulotGetSerializer()
+    class Meta:
+        model = KorzinkaMaxsulot
+        fields = ['id', 'korzinka', 'maxsulot', 'qiymat', 'sorov']
+
+class KorzinkaPostMaxsulotSerializer(ModelSerializer):
+    class Meta:
+        model = KorzinkaMaxsulot
+        fields = ['id', 'korzinka', 'maxsulot', 'qiymat', 'sorov']
+
+
+
+class OlinganMaxsulotlarSerializer(ModelSerializer):
     class Meta:
         model = OlinganMaxsulotlar
         fields = '__all__'
 
-class RadEtilganMaxsulotlarSerializer(serializers.ModelSerializer):
+class RadEtilganMaxsulotlarSerializer(ModelSerializer):
     class Meta:
         model = RadEtilganMaxsulotlar
         fields = '__all__'
 
-class BuyurtmaSearchSerializer(serializers.ModelSerializer):
+class BuyurtmaSearchSerializer(ModelSerializer):
     class Meta:
         model = Buyurtma
         fields = '__all__'
 
 
-class JamiMahsulotSerializer(serializers.ModelSerializer):
-    yakuniy_qiymat = serializers.SerializerMethodField()
+class JamiMahsulotSerializer(ModelSerializer):
+    yakuniy_qiymat = SerializerMethodField()
 
     class Meta:
         model = JamiMahsulot
@@ -101,7 +121,7 @@ class JamiMahsulotSerializer(serializers.ModelSerializer):
         return Decimal(obj.qiymat) - Decimal(olingan_jami_qiymat)
 
 
-class TalabnomaSerializer(serializers.ModelSerializer):
+class TalabnomaSerializer(ModelSerializer):
     class Meta:
         model = Talabnoma
         fields = '__all__'

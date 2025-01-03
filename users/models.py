@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .choices import UserRoleChoice
 
 
 
@@ -21,25 +22,15 @@ class Binos(AsosiyModel):
 
 
 class Users(AbstractUser):
-    class RoleChoice(models.TextChoices):
-        ADMIN = ("admin", "admin")
-        PROREKTOR = ("prorektor", "prorektor")
-        BUGALTER = ("bugalter", "bugalter")
-        XOJALIK = ("xojalik", "xojalik")
-        RTTM = ("rttm", "rttm")
-        OMBORCHI = ("omborchi", "omborchi")
-        KOMENDANT = ("komendant", "komendant")
-
     lavozim = models.CharField(max_length=255, blank=True)
     bino = models.ForeignKey(Binos, on_delete=models.CASCADE, null=True)
     qr_code = models.ImageField(upload_to='qr_code', null=True)
     qr_code_link = models.URLField(max_length=255, blank=True)
     parol = models.CharField(max_length=255, blank=True)
-    role = models.CharField(max_length=30, choices=RoleChoice.choices)
+    role = models.CharField(max_length=30, choices=UserRoleChoice.choices)
 
     def __str__(self):
         return self.username
 
 
-# user = Users.role
-# user = Users.RoleChoice.BUGALTER
+
