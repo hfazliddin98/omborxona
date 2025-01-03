@@ -16,8 +16,14 @@ class KategoriyaSerializer(ModelSerializer):
         model = Kategoriya
         fields = ['id', 'name']
 
+class BirlikSerializer(ModelSerializer):
+    class Meta:
+        model = Birlik
+        fields = ['id', 'name']
+
 class MaxsulotGetSerializer(ModelSerializer):
     kategoriya = KategoriyaSerializer()
+    birlik = BirlikSerializer()
     class Meta:
         model = Maxsulot
         fields = ['id', 'kategoriya', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm']
@@ -26,11 +32,6 @@ class MaxsulotPostSerializer(ModelSerializer):
     class Meta:
         model = Maxsulot
         fields = ['id', 'kategoriya', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm']
-
-class BirlikSerializer(ModelSerializer):
-    class Meta:
-        model = Birlik
-        fields = ['id', 'name']
 
 class OmborniYopishSerializer(ModelSerializer):
     class Meta:

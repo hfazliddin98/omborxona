@@ -1,22 +1,23 @@
-# from django.contrib import admin
+from django.contrib import admin
+from .models import Kategoriya, Maxsulot, Birlik
 # from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka, JamiMahsulot
-# from .models import OlinganMaxsulotlar, Buyurtma, RadEtilganMaxsulotlar, Talabnoma
+from .models import OlinganMaxsulotlar, Buyurtma, RadEtilganMaxsulotlar, Talabnoma
 
 
-# @admin.register(Kategoriya)
-# class KategoriyaAdmin(admin.ModelAdmin):
-#     list_display  = ['name']
-#     list_filter  = ['name']
+@admin.register(Kategoriya)
+class KategoriyaAdmin(admin.ModelAdmin):
+    list_display  = ['name']
+    list_filter  = ['name']
 
-# @admin.register(Maxsulot)
-# class MaxsulotNomiAdmin(admin.ModelAdmin):
-#     list_display  = ['kategoriya', 'name']
-#     list_filter = ['id', 'kategoriya', 'name']
+@admin.register(Maxsulot)
+class MaxsulotNomiAdmin(admin.ModelAdmin):
+    list_display  = ['name']
+    list_filter = ['name']
 
-# @admin.register(Birlik)
-# class BirlikAdmin(admin.ModelAdmin):
-#     list_display  = ['name']
-#     list_filter  = ['name']
+@admin.register(Birlik)
+class BirlikAdmin(admin.ModelAdmin):
+    list_display  = ['name']
+    list_filter  = ['name']
 
 # @admin.register(OmborniYopish)
 # class OmborniYopishAdmin(admin.ModelAdmin):
