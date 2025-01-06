@@ -6,13 +6,14 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulot, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulot
+from .models import OlinganMaxsulot, Buyurtma, Talabnoma, RadEtilganMaxsulot
 from .models import KorzinkaMaxsulot, BuyurtmaMaxsulot
+from .serializers import JamiMahsulotGetSerializer
 from .serializers import KategoriyaPostSerializer, KategoriyaGetSerializer
 from .serializers import MaxsulotGetSerializer, MaxsulotPostSerializer
 from .serializers import BuyurtmaGetSerializer, BuyurtmaPostSerializer, BuyurtmaMaxsulotGetSerializer, BuyurtmaMaxsulotPostSerializer
 from .serializers import KorzinkaMaxsulotGetSerializer, KorzinkaMaxsulotPostSerializer
-from .serializers import KorzinkaSerializer
+from .serializers import KorzinkaGetSerializer, KorzinkaPostSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer
 from .serializers import OmborGetSerializer, OmborPostSerializer
 from .serializers import OlinganMaxsulotGetSerializer, OlinganMaxsulotPostSerializer
@@ -92,11 +93,13 @@ class BuyurtmaMaxsulotViewSet(ModelViewSet):
 
 class KorzinkaViewSet(ModelViewSet):
     queryset = Korzinka.objects.all()
-    serializer_class = KorzinkaSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['komendant_user']
 
-    
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:  # GET uchun
+            return KorzinkaGetSerializer
+        return KorzinkaPostSerializer # POST, PUT, PATCH uchun
 
 class KorzinkaMaxsulotViewSet(ModelViewSet):
     queryset = KorzinkaMaxsulot.objects.all()
@@ -138,8 +141,6 @@ class RadEtilganMaxsulotlarViewSet(ModelViewSet):
 # jami maxsulot
 
 
-from .models import Kategoriya
-from .serializers import JamiMahsulotGetSerializer
 
 class KategoriyaWithJamiMahsulotView(APIView):
     """
