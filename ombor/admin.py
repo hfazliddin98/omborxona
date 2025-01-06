@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Kategoriya, Maxsulot, Birlik
-# from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka, JamiMahsulot
+from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka, JamiMahsulot
 from .models import OlinganMaxsulot, Buyurtma, RadEtilganMaxsulot, Talabnoma
 
 
@@ -19,19 +19,17 @@ class BirlikAdmin(admin.ModelAdmin):
     list_display  = ['name']
     list_filter  = ['name']
 
-# @admin.register(OmborniYopish)
-# class OmborniYopishAdmin(admin.ModelAdmin):
-#     list_display  = ['yopish']
+@admin.register(OmborniYopish)
+class OmborniYopishAdmin(admin.ModelAdmin):
+    list_display  = ['yopish']
 
-# @admin.register(Ombor)
-# class OmborAdmin(admin.ModelAdmin):
-#     list_display  = ['maxsulot', 'qiymat', 'birlik']
-#     list_filter  = ['maxsulot', 'qiymat', 'birlik']
+@admin.register(Ombor)
+class OmborAdmin(admin.ModelAdmin):
+    list_display  = ['maxsulot']
 
-# @admin.register(JamiMahsulot)
-# class JamiMahsulotAdmin(admin.ModelAdmin):
-#     list_display  = ['id', 'maxsulot', 'qiymat', 'birlik']
-#     list_filter = ['maxsulot', 'qiymat', 'birlik']
+@admin.register(JamiMahsulot)
+class JamiMahsulotAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'maxsulot', 'qiymat']
     
 
 # @admin.register(Buyurtma)

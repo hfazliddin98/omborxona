@@ -4,7 +4,7 @@ from .views import BuyurtmaMaxsulotViewSet
 from .views import KorzinkaMaxsulotViewSet
 from .views import KategoriyaViewSet, MaxsulotViewSet, BirlikViewSet, OmborniYopishViewSet, OmborViewSet
 from .views import KorzinkaViewSet, OlinganMaxsulotViewSet, BuyurtmaViewSet
-from .views import JamiMahsulotViewSet, RadEtilganMaxsulotlarViewSet, TalabnomaViewSet
+from .views import KategoriyaWithJamiMahsulotView, RadEtilganMaxsulotlarViewSet, TalabnomaViewSet
 
 
 router = SimpleRouter()
@@ -19,11 +19,11 @@ router.register(r'korzinka', KorzinkaViewSet, basename='korzinka')
 router.register(r'korzinka_maxsulot', KorzinkaMaxsulotViewSet, basename='korzinka_maxsulot')
 router.register(r'olingan_maxsulotlar', OlinganMaxsulotViewSet, basename='olingan_maxsulotlar')
 router.register(r'rad_etilgan_maxsulotlar', RadEtilganMaxsulotlarViewSet, basename='rad_etilgan_maxsulotlar')
-router.register(r'jami_maxsulotlar', JamiMahsulotViewSet, basename='jami_maxsulotlar')
+# router.register(r'jami_maxsulotlar', JamiMahsulotViewSet, basename='jami_maxsulotlar')
 router.register(r'talabnoma', TalabnomaViewSet, basename='talabnoma')
 
 
 urlpatterns = [
-    
+    path('jami_maxsulotlar/', KategoriyaWithJamiMahsulotView.as_view())
 ]
 urlpatterns += router.urls

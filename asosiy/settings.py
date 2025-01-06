@@ -97,6 +97,7 @@ REST_FRAMEWORK = {
 
 }
 
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Frontend domaingizni qo'shing
     "http://localhost:3001",  # Frontend domaingizni qo'shing
@@ -105,6 +106,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://omborxona2024.pythonanywhere.com",     
     "https://omborxona2024.pythonanywhere.com",
 ]
+
 
 
 

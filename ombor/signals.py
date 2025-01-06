@@ -1,22 +1,63 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
+from django.db.models import Sum
 from django.dispatch import receiver
-from .models import Ombor, JamiMahsulot, Talabnoma
-from django.db.models import F
+from decimal import Decimal
+from .models import Ombor, JamiMahsulot, OlinganMaxsulot
 
 @receiver(post_save, sender=Ombor)
-def update_jami_mahsulot(sender, instance, created, **kwargs):
-    if created:  # Faqat yangi mahsulot qo'shilganda
-        jami_mahsulot, created = JamiMahsulot.objects.get_or_create(
-            maxsulot=instance.maxsulot,
-            defaults={'qiymat': 0, 'birlik': instance.birlik}
-        )
-        # `qiymat` maydoni `CharField` bo'lgani uchun oldin uni raqamga aylantiramiz
-        jami_mahsulot.qiymat = str(int(jami_mahsulot.qiymat) + int(instance.qiymat))
-        jami_mahsulot.save()
+def update_jami_mahsulot_on_save(sender, instance, created, **kwargs):
+    # JamiMahsulot obyektini olish yoki yaratish
+    jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
+    
+    # Ombordagi mahsulot qiymatini hisoblash
+    jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
+        total_qiymat=Sum('qiymat')
+    )['total_qiymat'] or Decimal('0.00')
+    
+    # OlinganMaxsulot qiymatini hisoblash
+    olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
+        total_qiymat=Sum('qiymat')
+    )['total_qiymat'] or Decimal('0.00')
 
+    # JamiMahsulot qiymatini yangilash
+    jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+    jami_mahsulot.save()
 
+@receiver(post_delete, sender=Ombor)
+def update_jami_mahsulot_on_delete(sender, instance, **kwargs):
+    # JamiMahsulot obyektini olish yoki yaratish
+    jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
+    
+    # Ombordagi mahsulot qiymatini hisoblash
+    jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
+        total_qiymat=Sum('qiymat')
+    )['total_qiymat'] or Decimal('0.00')
+    
+    # OlinganMaxsulot qiymatini hisoblash
+    olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
+        total_qiymat=Sum('qiymat')
+    )['total_qiymat'] or Decimal('0.00')
 
-@receiver(post_save, sender=Talabnoma)
-def create_pdf_after_save(sender, instance, created, **kwargs):
-    if created and not instance.talabnoma_pdf:  # Faqat yangi obyektlar uchun
-        instance.pdf_create()
+    # JamiMahsulot qiymatini yangilash
+    jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+    jami_mahsulot.save()
+
+@receiver(post_save, sender=OlinganMaxsulot)
+@receiver(post_delete, sender=OlinganMaxsulot)
+def update_jami_mahsulot_on_olingan(sender, instance, **kwargs):
+    # JamiMahsulot obyektini olish yoki yaratish
+    jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
+
+    # Ombordagi mahsulot qiymatini hisoblash
+    jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
+        total_qiymat=Sum('qiymat')
+    )['total_qiymat'] or Decimal('0.00')
+    
+    # OlinganMaxsulot qiymatini hisoblash
+    olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
+        total_qiymat=Sum('qiymat')
+    )['total_qiymat'] or Decimal('0.00')
+
+    # JamiMahsulot qiymatini yangilash
+    jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+    jami_mahsulot.save()

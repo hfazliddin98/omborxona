@@ -1,5 +1,6 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from django.db.models import Sum
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, Serializer
+from django.db.models import Sum, Value, DecimalField
+from django.db.models.functions import Coalesce
 from django.contrib.auth import get_user_model
 from decimal import Decimal
 from ombor.models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
@@ -62,10 +63,17 @@ class OmborniYopishSerializer(ModelSerializer):
         model = OmborniYopish
         fields = ['id', 'yopish']
 
-class OmborSerializer(ModelSerializer):
+
+class OmborGetSerializer(ModelSerializer):
+    maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = Ombor
-        fields = '__all__'
+        fields = ['id', 'maxsulot', 'qiymat']
+
+class OmborPostSerializer(ModelSerializer):
+    class Meta:
+        model = Ombor
+        fields = ['id', 'maxsulot', 'qiymat']
 
 # buyurtma
 
@@ -147,19 +155,31 @@ class RadEtilganMaxsulotPostSerializer(ModelSerializer):
 
 
 
+
 class JamiMahsulotSerializer(ModelSerializer):
-    yakuniy_qiymat = SerializerMethodField()
+    """Mahsulot qiymatini chiqarish uchun serializer"""
+    maxsulot = MaxsulotGetSerializer()
 
     class Meta:
         model = JamiMahsulot
-        fields = '__all__'
+        fields = ['id', 'maxsulot', 'qiymat']
 
-    def get_yakuniy_qiymat(self, obj):
-        olingan_jami_qiymat = OlinganMaxsulot.objects.filter(
-            maxsulot=obj.maxsulot,
-            active=True
-        ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or 0.0
-        return Decimal(obj.qiymat) - Decimal(olingan_jami_qiymat)
+
+class JamiMahsulotGetSerializer(ModelSerializer):
+    """Kategoriya ichida mahsulotlar va qiymatlarini chiqarish uchun serializer"""
+    maxsulotlar = SerializerMethodField()
+
+    class Meta:
+        model = Kategoriya
+        fields = ['id', 'name', 'maxsulotlar']
+
+    def get_maxsulotlar(self, obj):
+        # JamiMahsulot ichidagi mahsulotlarni ushbu kategoriya bo‘yicha olish
+        jami_mahsulotlar = JamiMahsulot.objects.filter(maxsulot__kategoriya=obj)
+        return JamiMahsulotSerializer(jami_mahsulotlar, many=True).data
+
+
+
 
 
 class TalabnomaSerializer(ModelSerializer):
