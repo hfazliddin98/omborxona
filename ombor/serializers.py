@@ -13,7 +13,7 @@ UserModel = get_user_model()
 class BirlikSerializer(ModelSerializer):
     class Meta:
         model = Birlik
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'created_at']
 
 # kategoriya
 
@@ -21,13 +21,13 @@ class KategoriyaMaxsulotSerializer(ModelSerializer):
     birlik = BirlikSerializer()
     class Meta:
         model = Maxsulot
-        fields = ['id', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm']
+        fields = ['id', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm', 'created_at']
 
 class KategoriyaGetSerializer(ModelSerializer):
     maxsulot = KategoriyaMaxsulotSerializer(many=True, read_only=True)
     class Meta:
         model = Kategoriya
-        fields = ['id', 'name', 'maxsulot']
+        fields = ['id', 'name', 'maxsulot', 'created_at']
 
 class KategoriyaPostSerializer(ModelSerializer):
 
@@ -41,14 +41,14 @@ class KategoriyaPostSerializer(ModelSerializer):
 class MaxsulotKategoriyaSerializer(ModelSerializer):
     class Meta:
         model = Kategoriya
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'created_at']
 
 class MaxsulotGetSerializer(ModelSerializer):
     kategoriya = MaxsulotKategoriyaSerializer()
     birlik = BirlikSerializer()
     class Meta:
         model = Maxsulot
-        fields = ['id', 'kategoriya', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm']
+        fields = ['id', 'kategoriya', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm', 'created_at']
 
 class MaxsulotPostSerializer(ModelSerializer):
     class Meta:
@@ -61,14 +61,14 @@ class MaxsulotPostSerializer(ModelSerializer):
 class OmborniYopishSerializer(ModelSerializer):
     class Meta:
         model = OmborniYopish
-        fields = ['id', 'yopish']
+        fields = ['id', 'yopish', 'created_at']
 
 
 class OmborGetSerializer(ModelSerializer):
     maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = Ombor
-        fields = ['id', 'maxsulot', 'qiymat']
+        fields = ['id', 'maxsulot', 'qiymat', 'created_at']
 
 class OmborPostSerializer(ModelSerializer):
     class Meta:
@@ -81,7 +81,7 @@ class BuyurtmaGetSerializer(ModelSerializer):
     komendant_user = UserGetSerializer()
     class Meta:
         model = Buyurtma
-        fields = ['id', 'komendant_user', 'buyurtma_role', 'tasdiqlash', 'rad_etish', 'izoh']
+        fields = ['id', 'komendant_user', 'buyurtma_role', 'tasdiqlash', 'rad_etish', 'izoh', 'created_at']
 
 class BuyurtmaPostSerializer(ModelSerializer):
     class Meta:
@@ -93,7 +93,7 @@ class BuyurtmaMaxsulotGetSerializer(ModelSerializer):
     maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = BuyurtmaMaxsulot
-        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat']
+        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat', 'created_at']
 
 class BuyurtmaMaxsulotPostSerializer(ModelSerializer):
     class Meta:
@@ -106,7 +106,7 @@ class KorzinkaGetSerializer(ModelSerializer):
     komendant_user= UserGetSerializer()
     class Meta:
         model = Korzinka
-        fields = ['id', 'komendant_user']
+        fields = ['id', 'komendant_user', 'created_at']
 
 class KorzinkaPostSerializer(ModelSerializer):
     class Meta:
@@ -119,7 +119,7 @@ class KorzinkaMaxsulotGetSerializer(ModelSerializer):
     maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = KorzinkaMaxsulot
-        fields = ['id', 'korzinka', 'maxsulot', 'qiymat', 'sorov']
+        fields = ['id', 'korzinka', 'maxsulot', 'qiymat', 'sorov', 'created_at']
 
 class KorzinkaMaxsulotPostSerializer(ModelSerializer):
     class Meta:
@@ -133,7 +133,7 @@ class OlinganMaxsulotGetSerializer(ModelSerializer):
     maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = OlinganMaxsulot
-        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat']
+        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat', 'created_at']
 
 
 class OlinganMaxsulotPostSerializer(ModelSerializer):
@@ -150,7 +150,7 @@ class RadEtilganMaxsulotGetSerializer(ModelSerializer):
     maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = RadEtilganMaxsulot
-        fields = ['id', 'rad_etgan_user', 'buyurtma', 'maxsulot', 'qiymat']
+        fields = ['id', 'rad_etgan_user', 'buyurtma', 'maxsulot', 'qiymat', 'created_at']
 
 class RadEtilganMaxsulotPostSerializer(ModelSerializer):
     class Meta:
@@ -167,7 +167,7 @@ class JamiMahsulotSerializer(ModelSerializer):
 
     class Meta:
         model = JamiMahsulot
-        fields = ['id', 'maxsulot', 'qiymat']
+        fields = ['id', 'maxsulot', 'qiymat', 'created_at']
 
 
 class JamiMahsulotGetSerializer(ModelSerializer):
@@ -176,7 +176,7 @@ class JamiMahsulotGetSerializer(ModelSerializer):
 
     class Meta:
         model = Kategoriya
-        fields = ['id', 'name', 'maxsulotlar']
+        fields = ['id', 'name', 'maxsulotlar', 'created_at']
 
     def get_maxsulotlar(self, obj):
         # JamiMahsulot ichidagi mahsulotlarni ushbu kategoriya bo‘yicha olish
