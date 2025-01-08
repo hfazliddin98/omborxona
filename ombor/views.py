@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.generics import DestroyAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
@@ -101,6 +102,9 @@ class KorzinkaAPIView(APIView):
         except Korzinka.DoesNotExist:
             return Response({"error": "Korzinka topilmadi."}, status=status.HTTP_404_NOT_FOUND)
 
+class KorzinkaDestroyAPIView(DestroyAPIView):
+    queryset = Korzinka.objects.all()
+    serializer_class = KorzinkaSerializer
     
 class KorzinkaMaxsulotAPIView(APIView):
 
@@ -120,7 +124,12 @@ class KorzinkaMaxsulotAPIView(APIView):
             message = "Korzinka yaratildi va mahsulot muvaffaqiyatli qo'shildi." if created else "Mahsulot muvaffaqiyatli qo'shildi."
             return Response({"message": message}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
+class KorzinkaMaxsulotDestroyAPIView(DestroyAPIView):
+    queryset = KorzinkaMaxsulot.objects.all()
+    serializer_class = KorzinkaMaxsulotSerializer
+
 
     
 # olingan maxsulot

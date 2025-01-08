@@ -4,7 +4,7 @@ from .views import BuyurtmaMaxsulotViewSet
 from .views import KategoriyaViewSet, MaxsulotViewSet, BirlikViewSet, OmborniYopishViewSet, OmborViewSet
 from .views import OlinganMaxsulotViewSet, BuyurtmaViewSet
 from .views import KategoriyaWithJamiMahsulotView, RadEtilganMaxsulotlarViewSet, TalabnomaViewSet
-from .views import KorzinkaAPIView, KorzinkaMaxsulotAPIView
+from .views import KorzinkaAPIView, KorzinkaDestroyAPIView, KorzinkaMaxsulotAPIView, KorzinkaMaxsulotDestroyAPIView
 
 
 router = SimpleRouter()
@@ -22,7 +22,10 @@ router.register(r'talabnoma', TalabnomaViewSet, basename='talabnoma')
 
 urlpatterns = [
     path('jami_maxsulotlar/', KategoriyaWithJamiMahsulotView.as_view(), name='jami_maxsulotlar'),
-    path('korzinka/', KorzinkaAPIView.as_view(), name='korzinka'),
-    path('korzinka_maxsulot/', KorzinkaMaxsulotAPIView.as_view(), name='korzinka_maxsulot')
+    path('korzinka/', KorzinkaAPIView.as_view(), name='korzinka_list'),
+    path('korzinka/<uuid:pk>/', KorzinkaDestroyAPIView.as_view(), name='korzinka_destroy'),
+    # path('korzinka_maxsulot/', KorzinkaMaxsulotAPIView.as_view(), name='korzinka_maxsulot')
+    path('korzinka_maxsulot/', KorzinkaMaxsulotAPIView.as_view(), name='korzinka_maxsulot_list'),
+    path('korzinka_maxsulot/<uuid:pk>/', KorzinkaMaxsulotDestroyAPIView.as_view(), name='korzinka_maxsulot_destroy'),
 ]
 urlpatterns += router.urls
