@@ -61,7 +61,7 @@ class MaxsulotPostSerializer(ModelSerializer):
 class OmborniYopishSerializer(ModelSerializer):
     class Meta:
         model = OmborniYopish
-        fields = ['id', 'yopish', 'created_at']
+        fields = ['id', 'yopish']
 
 
 class OmborGetSerializer(ModelSerializer):
