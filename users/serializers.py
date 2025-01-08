@@ -16,7 +16,7 @@ class UserGetSerializer(serializers.ModelSerializer):
     bino = BinosSerializer()
     class Meta:
         model = Users
-        fields = ['id', 'username', 'first_name', 'last_name', 'parol', 'lavozim', 'bino', 'role', 'is_active', 'created_at']
+        fields = ['id', 'username', 'first_name', 'last_name', 'parol', 'lavozim', 'bino', 'role', 'is_active']
     
 
 class UserPostSerializer(serializers.ModelSerializer):
