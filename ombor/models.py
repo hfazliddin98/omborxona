@@ -59,8 +59,6 @@ class BuyurtmaMaxsulot(AsosiyModel):
 class OmborniYopish(AsosiyModel):
     yopish = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.yopish
 
 class Ombor(AsosiyModel):
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
