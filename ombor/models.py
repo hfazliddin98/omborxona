@@ -93,10 +93,9 @@ class Korzinka(AsosiyModel):
         return self.user.username
     
 class KorzinkaMaxsulot(AsosiyModel):
-    korzinka = models.ForeignKey(Korzinka, on_delete=models.CASCADE)
+    korzinka = models.ForeignKey(Korzinka, on_delete=models.CASCADE, related_name='korzinka')
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
     qiymat = models.DecimalField(max_digits=10, decimal_places=2) 
-    sorov = models.BooleanField(default=False)
 
     def __str__(self):
         return self.maxsulot.name

@@ -3,6 +3,7 @@ from django.db.models import Sum, Value, DecimalField
 from django.db.models.functions import Coalesce
 from django.contrib.auth import get_user_model
 from decimal import Decimal
+from asosiy.settings import DOMEN
 from ombor.models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
 from ombor.models import OlinganMaxsulot, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulot
 from ombor.models import BuyurtmaMaxsulot, KorzinkaMaxsulot
@@ -42,6 +43,7 @@ class MaxsulotKategoriyaSerializer(ModelSerializer):
     class Meta:
         model = Kategoriya
         fields = ['id', 'name', 'created_at']
+ 
 
 class MaxsulotGetSerializer(ModelSerializer):
     kategoriya = MaxsulotKategoriyaSerializer()
@@ -49,6 +51,7 @@ class MaxsulotGetSerializer(ModelSerializer):
     class Meta:
         model = Maxsulot
         fields = ['id', 'kategoriya', 'name', 'maxsulot_role', 'birlik', 'maxviylik', 'rasm', 'created_at']
+
 
 class MaxsulotPostSerializer(ModelSerializer):
     class Meta:
@@ -102,29 +105,28 @@ class BuyurtmaMaxsulotPostSerializer(ModelSerializer):
 
 # korzinka
 
-class KorzinkaGetSerializer(ModelSerializer):
-    komendant_user= UserGetSerializer()
-    class Meta:
-        model = Korzinka
-        fields = ['id', 'komendant_user', 'created_at']
+class KorzinkaMaxsulotSerializer(ModelSerializer):
+    maxsulot = MaxsulotGetSerializer()  # Mahsulot nomini ko'rsatish uchun
 
-class KorzinkaPostSerializer(ModelSerializer):
-    class Meta:
-        model = Korzinka
-        fields = ['komendant_user']
-
-
-class KorzinkaMaxsulotGetSerializer(ModelSerializer):
-    korzinka = KorzinkaGetSerializer()
-    maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = KorzinkaMaxsulot
-        fields = ['id', 'korzinka', 'maxsulot', 'qiymat', 'sorov', 'created_at']
+        fields = ['id', 'maxsulot', 'qiymat'] 
 
 class KorzinkaMaxsulotPostSerializer(ModelSerializer):
     class Meta:
         model = KorzinkaMaxsulot
-        fields = ['korzinka', 'maxsulot', 'qiymat', 'sorov']
+        fields = ['maxsulot', 'qiymat'] 
+
+class KorzinkaSerializer(ModelSerializer):
+    korzinka = KorzinkaMaxsulotSerializer(many=True, read_only=True)  # related_name='korzinka' dan foydalanamiz
+
+    class Meta:
+        model = Korzinka
+        fields = ['id', 'komendant_user', 'korzinka'] 
+
+
+
+
 
 # olingan maxsulot
 

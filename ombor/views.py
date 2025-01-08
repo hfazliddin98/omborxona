@@ -12,8 +12,8 @@ from .serializers import JamiMahsulotGetSerializer
 from .serializers import KategoriyaPostSerializer, KategoriyaGetSerializer
 from .serializers import MaxsulotGetSerializer, MaxsulotPostSerializer
 from .serializers import BuyurtmaGetSerializer, BuyurtmaPostSerializer, BuyurtmaMaxsulotGetSerializer, BuyurtmaMaxsulotPostSerializer
-from .serializers import KorzinkaMaxsulotGetSerializer, KorzinkaMaxsulotPostSerializer
-from .serializers import KorzinkaGetSerializer, KorzinkaPostSerializer
+from .serializers import KorzinkaMaxsulotPostSerializer
+from .serializers import KorzinkaSerializer, KorzinkaMaxsulotSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer
 from .serializers import OmborGetSerializer, OmborPostSerializer
 from .serializers import OlinganMaxsulotGetSerializer, OlinganMaxsulotPostSerializer
@@ -91,25 +91,36 @@ class BuyurtmaMaxsulotViewSet(ModelViewSet):
 
 # korzinka
 
-class KorzinkaViewSet(ModelViewSet):
-    queryset = Korzinka.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['komendant_user']
+class KorzinkaAPIView(APIView):
 
-    def get_serializer_class(self):
-        if self.action in ['list', 'retrieve']:  # GET uchun
-            return KorzinkaGetSerializer
-        return KorzinkaPostSerializer # POST, PUT, PATCH uchun
+    def get(self, request):
+        try:
+            korzinka = Korzinka.objects.get(komendant_user=request.user)
+            serializer = KorzinkaSerializer(korzinka)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Korzinka.DoesNotExist:
+            return Response({"error": "Korzinka topilmadi."}, status=status.HTTP_404_NOT_FOUND)
 
-class KorzinkaMaxsulotViewSet(ModelViewSet):
-    queryset = KorzinkaMaxsulot.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['korzinka', 'maxsulot', 'qiymat', 'sorov']
+    
+class KorzinkaMaxsulotAPIView(APIView):
 
-    def get_serializer_class(self):
-        if self.action in ['list', 'retrieve']:  # GET uchun
-            return KorzinkaMaxsulotGetSerializer
-        return KorzinkaMaxsulotPostSerializer # POST, PUT, PATCH uchun
+    def post(self, request):
+        # Foydalanuvchining korzinkasini olish yoki yaratish
+        korzinka, created = Korzinka.objects.get_or_create(komendant_user=request.user)
+
+        # Serializer bilan validatsiya
+        serializer = KorzinkaMaxsulotPostSerializer(data=request.data)
+        if serializer.is_valid():
+            # Mahsulotni korzinkaga qo'shish
+            KorzinkaMaxsulot.objects.create(
+                korzinka=korzinka,
+                maxsulot=serializer.validated_data['maxsulot'],
+                qiymat=serializer.validated_data['qiymat'],
+            )
+            message = "Korzinka yaratildi va mahsulot muvaffaqiyatli qo'shildi." if created else "Mahsulot muvaffaqiyatli qo'shildi."
+            return Response({"message": message}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
     
 # olingan maxsulot
