@@ -5,6 +5,7 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from users.views import bosh_sahifa
+from .views import PublicSwaggerView
 
 
 
@@ -21,7 +22,7 @@ urlpatterns = [
 
     # Optional UI:
    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-   path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger'),
+   path('swagger/', PublicSwaggerView.as_view(url_name='schema'), name='swagger'),
    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
