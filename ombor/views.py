@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
@@ -81,70 +82,62 @@ class BuyurtmaViewSet(ModelViewSet):
 
 # korzinka
 
+class KorzinkaViewSet(ModelViewSet):
+    queryset = Korzinka.objects.all()
+    serializer_class = KorzinkaSerializer
+    http_method_names = ['get', 'delete']
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['komendant_user', 'maxsulot_role']
 
-class KorzinkaViewSet(ViewSet):
 
-    def list(self, request):
+
+    def list(self, request, *args, **kwargs):
+        """Korzinkani foydalanuvchi bo‘yicha qaytarish."""
         try:
-            # queryset = Korzinka.objects.filter(komendant_user=request.user)
-            queryset = Korzinka.objects.all()
-            serializer = KorzinkaSerializer(queryset, many=True)
+            queryset = self.queryset.all() # Foydalanuvchiga tegishli ma’lumotlarni olish
+            serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Korzinka.DoesNotExist:
             return Response({"error": "Korzinka topilmadi."}, status=status.HTTP_404_NOT_FOUND)
-        
-    def destroy(self, request, pk=None):
-        try:
-            queryset = Korzinka.objects.get(pk=pk, komendant_user=request.user)
-            queryset.delete()  # This actually deletes the object
-            return Response({"message": "Korzinka o`chirildi."}, status=status.HTTP_204_NO_CONTENT)  # HTTP 204 for successful deletion
-        except Korzinka.DoesNotExist:
-            return Response({"error": "Korzinka topilmadi."}, status=status.HTTP_404_NOT_FOUND)  # Handle the case if not found
 
 
-class KorzinkaMaxsulotViewSet(ViewSet):
-    def create(self, request):
-        # Serializer bilan validatsiya
-        serializer = KorzinkaMaxsulotPostSerializer(data=request.data)
-        
+class KorzinkaMaxsulotViewSet(ModelViewSet):
+    queryset = KorzinkaMaxsulot.objects.all()
+    serializer_class = KorzinkaMaxsulotPostSerializer
+    http_method_names = ['post', 'delete']
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['korzinka__komendant_user', 'korzinka__maxsulot_role']
+
+    def perform_create(self, serializer):
+        maxsulot = serializer.validated_data['maxsulot']
+        qiymat = serializer.validated_data['qiymat']
+        user = self.request.user
+
+        # Mahsulot roli asosida korzinka topish yoki yaratish
+        korzinka, created = Korzinka.objects.get_or_create(
+            komendant_user=user,
+            maxsulot_role=maxsulot.maxsulot_role,  # Mahsulot roli asosida korzinka
+        )
+
+        # Mahsulotni korzinkaga qo'shish
+        if not KorzinkaMaxsulot.objects.filter(korzinka=korzinka, maxsulot=maxsulot).exists():
+            # Mahsulotni yaratish
+            serializer.save(korzinka=korzinka)
+        else:
+            raise ValidationError("Bu mahsulot allaqachon korzinkada mavjud.")
+
+    def create(self, request, *args, **kwargs):
+        """
+        Create a new KorzinkaMaxsulot, only if the product is not already in the cart.
+        """
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            maxsulot = serializer.validated_data['maxsulot']
-            qiymat = serializer.validated_data['qiymat']
-            user = request.user
-
-            # Mahsulot roliga mos korzinkani topish yoki yaratish
-            korzinka, created = Korzinka.objects.get_or_create(
-                komendant_user=user,
-                maxsulot_role=maxsulot.maxsulot_role,  # Mahsulot roli asosida korzinka
-            )
-
-            # Mahsulotni korzinkaga qo'shish
-            if not KorzinkaMaxsulot.objects.filter(korzinka=korzinka, maxsulot=maxsulot).exists():
-                KorzinkaMaxsulot.objects.create(
-                    korzinka=korzinka,
-                    maxsulot=maxsulot,
-                    qiymat=qiymat,
-                )
-                return Response(
-                    {"message": "Mahsulot korzinkaga muvaffaqiyatli qo'shildi."},
-                    status=status.HTTP_201_CREATED,
-                )
-            else:
-                return Response(
-                    {"error": "Bu mahsulot allaqachon korzinkada mavjud."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        
+            try:
+                self.perform_create(serializer)
+                return Response({"message": "Mahsulot korzinkaga muvaffaqiyatli qo'shildi."}, status=status.HTTP_201_CREATED)
+            except ValidationError as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-    def destroy(self, request, pk=None):
-        try:
-            queryset = KorzinkaMaxsulot.objects.get(pk=pk)
-            queryset.delete()  # This actually deletes the object
-            return Response({"message": "KorzinkaMaxsulot o`chirildi."}, status=status.HTTP_204_NO_CONTENT)  # HTTP 204 for successful deletion
-        except KorzinkaMaxsulot.DoesNotExist:
-            return Response({"error": "KorzinkaMaxsulot topilmadi."}, status=status.HTTP_404_NOT_FOUND)  # Handle the case if not found
 
 
     
@@ -153,6 +146,7 @@ class KorzinkaMaxsulotViewSet(ViewSet):
 class OlinganMaxsulotViewSet(ModelViewSet):
     queryset = OlinganMaxsulot.objects.all()
     serializer_class = OlinganMaxsulotSerializer
+    http_method_names = ['get']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['buyurtma']
 
@@ -163,6 +157,7 @@ class OlinganMaxsulotViewSet(ModelViewSet):
 class RadEtilganMaxsulotlarViewSet(ModelViewSet):
     queryset = RadEtilganMaxsulot.objects.all()
     serializer_class = RadEtilganMaxsulotSerializer
+    http_method_names = ['get']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['rad_etgan_user', 'buyurtma']
 

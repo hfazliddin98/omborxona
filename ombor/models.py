@@ -69,7 +69,7 @@ class Korzinka(AsosiyModel):
         return self.komendant_user.username
     
 class KorzinkaMaxsulot(AsosiyModel):
-    korzinka = models.ForeignKey(Korzinka, on_delete=models.CASCADE, related_name='korzinka')
+    korzinka = models.ForeignKey(Korzinka, on_delete=models.CASCADE, related_name='maxsulotlar')
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
     qiymat = models.DecimalField(max_digits=10, decimal_places=2) 
 
@@ -96,7 +96,7 @@ class Buyurtma(AsosiyModel):
         return self.komendant_user.username
     
 class BuyurtmaMaxsulot(AsosiyModel):
-    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
+    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE, related_name='maxsulotlar')
     maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
     qiymat = models.DecimalField(max_digits=10, decimal_places=2)   
 

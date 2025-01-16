@@ -89,7 +89,6 @@ def add_to_buyurtma_on_korzinka_delete(sender, instance, **kwargs):
                     "omborchi": False,
                     "rttm": False,
                     "xojalik": False,
-                    "sorov": False,
                     "tasdiqlash": False,
                     "rad_etish": False,
                     "izoh": " ",
