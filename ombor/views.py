@@ -91,22 +91,12 @@ class KorzinkaViewSet(ModelViewSet):
 
 
 
-    def list(self, request, *args, **kwargs):
-        """Korzinkani foydalanuvchi bo‘yicha qaytarish."""
-        try:
-            queryset = self.queryset.all() # Foydalanuvchiga tegishli ma’lumotlarni olish
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Korzinka.DoesNotExist:
-            return Response({"error": "Korzinka topilmadi."}, status=status.HTTP_404_NOT_FOUND)
-
-
 class KorzinkaMaxsulotViewSet(ModelViewSet):
     queryset = KorzinkaMaxsulot.objects.all()
     serializer_class = KorzinkaMaxsulotPostSerializer
     http_method_names = ['post', 'delete']
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['korzinka__komendant_user', 'korzinka__maxsulot_role']
+    filterset_fields = ['komendant_user', 'maxsulot_role']
 
     def perform_create(self, serializer):
         maxsulot = serializer.validated_data['maxsulot']

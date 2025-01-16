@@ -94,7 +94,11 @@ class BuyurtmaSerializer(ModelSerializer):
     maxsulotlar = BuyurtmaMaxsulotSerializer(many=True, read_only=True)
     class Meta:
         model = Buyurtma
-        fields = ['id', 'komendant_user', 'buyurtma_role', 'maxsulotlar', 'tasdiqlash', 'rad_etish', 'izoh', 'created_at']
+        fields = [
+            'id', 'komendant_user', 'maxsulot_role', 'buyurtma_role', 'maxsulotlar', 
+            'prorektor', 'bugalter', 'omborchi', 'rttm', 'xojalik',
+            'tasdiqlash', 'rad_etish', 'izoh', 'created_at'
+            ]
 
 
 # korzinka
@@ -113,6 +117,7 @@ class KorzinkaMaxsulotPostSerializer(ModelSerializer):
 
 
 class KorzinkaSerializer(ModelSerializer):
+    komendant_user = UserGetSerializer()
     maxsulotlar = KorzinkaMaxsulotSerializer(many=True, read_only=True)
 
     class Meta:

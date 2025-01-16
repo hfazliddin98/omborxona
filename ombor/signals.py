@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from decimal import Decimal
 from .models import Ombor, JamiMahsulot, OlinganMaxsulot
 from .models import Korzinka, KorzinkaMaxsulot, Buyurtma, BuyurtmaMaxsulot
-from users.choices import MaxsulotRoleChoice
+from users.choices import MaxsulotRoleChoice, UserRoleChoice
 
 
 @receiver(post_save, sender=Ombor)
@@ -25,6 +25,7 @@ def update_jami_mahsulot_on_save(sender, instance, created, **kwargs):
     # JamiMahsulot qiymatini yangilash
     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
     jami_mahsulot.save()
+
 
 @receiver(post_delete, sender=Ombor)
 def update_jami_mahsulot_on_delete(sender, instance, **kwargs):
@@ -67,6 +68,7 @@ def update_jami_mahsulot_on_olingan(sender, instance, **kwargs):
     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
     jami_mahsulot.save()
 
+ 
 
 @receiver(pre_delete, sender=Korzinka)
 def add_to_buyurtma_on_korzinka_delete(sender, instance, **kwargs):
@@ -75,7 +77,7 @@ def add_to_buyurtma_on_korzinka_delete(sender, instance, **kwargs):
 
     if korzinka_mahsulotlari.exists():
         for mahsulot in korzinka_mahsulotlari:
-            maxsulot_role = mahsulot.maxsulot.maxsulot_role
+            maxsulot_role = mahsulot.maxsulot.maxsulot_role  # Mahsulotning roli
 
             # Foydalanuvchiga mos aktiv buyurtmani topish yoki yaratish
             buyurtma, created = Buyurtma.objects.get_or_create(
@@ -83,7 +85,7 @@ def add_to_buyurtma_on_korzinka_delete(sender, instance, **kwargs):
                 maxsulot_role=maxsulot_role,  # Mahsulot roli asosida
                 active=True,
                 defaults={
-                    "buyurtma_role": maxsulot_role,
+                    "buyurtma_role": mahsulot.maxsulot.maxsulot_role,  # Komendant roli asosida buyurtma roli
                     "prorektor": False,
                     "bugalter": False,
                     "omborchi": False,
@@ -91,16 +93,17 @@ def add_to_buyurtma_on_korzinka_delete(sender, instance, **kwargs):
                     "xojalik": False,
                     "tasdiqlash": False,
                     "rad_etish": False,
-                    "izoh": " ",
+                    "izoh": f"Avtomatik yaratildi: {maxsulot_role}",
                 }
             )
 
-            # Mahsulotni buyurtmaga qo‘shish
+            # Mahsulotni buyurtmaga qo‘shish (agar mavjud bo'lmasa)
             BuyurtmaMaxsulot.objects.get_or_create(
                 buyurtma=buyurtma,
                 maxsulot=mahsulot.maxsulot,
                 defaults={"qiymat": mahsulot.qiymat}
             )
+
 
 
 @receiver(post_save, sender=KorzinkaMaxsulot)
@@ -134,10 +137,15 @@ def update_buyurtma_post_save(sender, instance, created, **kwargs):
     Buyurtma yaratilganidan yoki yangilanganidan keyin avtomatik bog'liq o'zgarishlarni qo'llash.
     """
 
-    if created:
-        print(f"Yangi buyurtma yaratildi: {instance.komendant_user.username} uchun")
-    else:
-        print(f"Buyurtma yangilandi: {instance.komendant_user.username} uchun")
+    # Faqat mavjud bo'lgan obyektni yangilashda ishlaydi
+    if not created:
+        if instance.rttm == True or instance.xojalik == True:
+            instance.buyurtma_role = UserRoleChoice.PROREKTOR
+       
+      
+
+        # Yangi qiymatni saqlash
+        instance.save()
 
     # Bog'liq mahsulotlarni avtomatik yangilash
     buyurtma_mahsulotlari = BuyurtmaMaxsulot.objects.filter(buyurtma=instance)
