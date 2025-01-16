@@ -13,6 +13,7 @@ def bosh_sahifa(request):
 
 class UserViewSet(ModelViewSet):
     queryset = Users.objects.filter(is_superuser=False)
+    http_method_names = ['get', 'post', 'patch']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['username', 'role']
     
@@ -25,6 +26,7 @@ class UserViewSet(ModelViewSet):
 class BinosViewSet(ModelViewSet):
     queryset = Binos.objects.all()
     serializer_class = BinosSerializer
+    http_method_names = ['get', 'post', 'patch']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
 

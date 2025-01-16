@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, Serializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, Serializer, PrimaryKeyRelatedField
 from django.db.models import Sum, Value, DecimalField
 from django.db.models.functions import Coalesce
 from django.contrib.auth import get_user_model
@@ -7,7 +7,9 @@ from asosiy.settings import DOMEN
 from ombor.models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
 from ombor.models import OlinganMaxsulot, Buyurtma, JamiMahsulot, Talabnoma, RadEtilganMaxsulot
 from ombor.models import BuyurtmaMaxsulot, KorzinkaMaxsulot
+from users.choices import MaxsulotRoleChoice
 from users.serializers import UserGetSerializer
+
 
 UserModel = get_user_model()
 
@@ -80,33 +82,25 @@ class OmborPostSerializer(ModelSerializer):
 
 # buyurtma
 
-class BuyurtmaGetSerializer(ModelSerializer):
-    komendant_user = UserGetSerializer()
-    class Meta:
-        model = Buyurtma
-        fields = ['id', 'komendant_user', 'buyurtma_role', 'tasdiqlash', 'rad_etish', 'izoh', 'created_at']
 
-class BuyurtmaPostSerializer(ModelSerializer):
-    class Meta:
-        model = Buyurtma
-        fields = ['komendant_user', 'buyurtma_role', 'tasdiqlash', 'rad_etish', 'izoh']
-
-class BuyurtmaMaxsulotGetSerializer(ModelSerializer):
-    buyurtma = BuyurtmaGetSerializer()
+class BuyurtmaMaxsulotSerializer(ModelSerializer):
     maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = BuyurtmaMaxsulot
         fields = ['id', 'buyurtma', 'maxsulot', 'qiymat', 'created_at']
 
-class BuyurtmaMaxsulotPostSerializer(ModelSerializer):
+class BuyurtmaSerializer(ModelSerializer):
+    komendant_user = UserGetSerializer()
+    maxsulotlar = BuyurtmaMaxsulotSerializer(many=True, read_only=True)
     class Meta:
-        model = BuyurtmaMaxsulot
-        fields = ['buyurtma', 'maxsulot', 'qiymat']
+        model = Buyurtma
+        fields = ['id', 'komendant_user', 'buyurtma_role', 'maxsulotlar', 'tasdiqlash', 'rad_etish', 'izoh', 'created_at']
+
 
 # korzinka
 
 class KorzinkaMaxsulotSerializer(ModelSerializer):
-    maxsulot = MaxsulotGetSerializer()  # Mahsulot nomini ko'rsatish uchun
+    maxsulot = MaxsulotGetSerializer()  
 
     class Meta:
         model = KorzinkaMaxsulot
@@ -115,49 +109,44 @@ class KorzinkaMaxsulotSerializer(ModelSerializer):
 class KorzinkaMaxsulotPostSerializer(ModelSerializer):
     class Meta:
         model = KorzinkaMaxsulot
-        fields = ['maxsulot', 'qiymat'] 
+        fields = ['maxsulot', 'qiymat']
+
 
 class KorzinkaSerializer(ModelSerializer):
-    korzinka = KorzinkaMaxsulotSerializer(many=True, read_only=True)  # related_name='korzinka' dan foydalanamiz
+    maxsulotlar = KorzinkaMaxsulotSerializer(many=True, read_only=True)
 
     class Meta:
         model = Korzinka
-        fields = ['id', 'komendant_user', 'korzinka'] 
-
-
+        fields = ['id', 'komendant_user', 'maxsulot_role', 'maxsulotlar'] 
 
 
 
 # olingan maxsulot
 
 class OlinganMaxsulotGetSerializer(ModelSerializer):
-    buyurtma = BuyurtmaGetSerializer()
+    buyurtma = BuyurtmaSerializer()
     maxsulot = MaxsulotGetSerializer()
     class Meta:
         model = OlinganMaxsulot
-        fields = ['id', 'buyurtma', 'maxsulot', 'qiymat', 'created_at']
+        fields = ['id', 'buyurtma', 'created_at']
 
 
-class OlinganMaxsulotPostSerializer(ModelSerializer):
-    class Meta:
-        model = OlinganMaxsulot
-        fields = ['buyurtma', 'maxsulot', 'qiymat']
+
 
 
 # rad etilgan maxsulot
 
 class RadEtilganMaxsulotGetSerializer(ModelSerializer):
     rad_etgan_user = UserGetSerializer()
-    buyurtma = BuyurtmaGetSerializer()
-    maxsulot = MaxsulotGetSerializer()
+    buyurtma = BuyurtmaSerializer()
     class Meta:
         model = RadEtilganMaxsulot
-        fields = ['id', 'rad_etgan_user', 'buyurtma', 'maxsulot', 'qiymat', 'created_at']
+        fields = ['id', 'rad_etgan_user', 'buyurtma', 'created_at']
 
 class RadEtilganMaxsulotPostSerializer(ModelSerializer):
     class Meta:
         model = RadEtilganMaxsulot
-        fields = ['rad_etgan_user', 'buyurtma', 'maxsulot', 'qiymat']
+        fields = ['rad_etgan_user', 'buyurtma']
 
 
 
@@ -184,9 +173,7 @@ class JamiMahsulotGetSerializer(ModelSerializer):
         # JamiMahsulot ichidagi mahsulotlarni ushbu kategoriya bo‘yicha olish
         jami_mahsulotlar = JamiMahsulot.objects.filter(maxsulot__kategoriya=obj)
         return JamiMahsulotSerializer(jami_mahsulotlar, many=True).data
-
-
-
+    
 
 
 class TalabnomaSerializer(ModelSerializer):

@@ -45,6 +45,8 @@ def update_jami_mahsulot_on_delete(sender, instance, **kwargs):
     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
     jami_mahsulot.save()
 
+
+
 @receiver(post_save, sender=OlinganMaxsulot)
 @receiver(post_delete, sender=OlinganMaxsulot)
 def update_jami_mahsulot_on_olingan(sender, instance, **kwargs):
@@ -66,93 +68,82 @@ def update_jami_mahsulot_on_olingan(sender, instance, **kwargs):
     jami_mahsulot.save()
 
 
-
 @receiver(pre_delete, sender=Korzinka)
 def add_to_buyurtma_on_korzinka_delete(sender, instance, **kwargs):
     komendant_user = instance.komendant_user
     korzinka_mahsulotlari = KorzinkaMaxsulot.objects.filter(korzinka=instance)
 
-    # Mahsulotlarni maxsulot_role bo'yicha ajratish
-    mahsulotlar_by_role = {
-        MaxsulotRoleChoice.XOJALIK: [],
-        MaxsulotRoleChoice.RTTM: []
-    }
+    if korzinka_mahsulotlari.exists():
+        for mahsulot in korzinka_mahsulotlari:
+            maxsulot_role = mahsulot.maxsulot.maxsulot_role
 
-    for mahsulot in korzinka_mahsulotlari:
-        if mahsulot.maxsulot.maxsulot_role == MaxsulotRoleChoice.XOJALIK:
-            mahsulotlar_by_role[MaxsulotRoleChoice.XOJALIK].append(mahsulot)
-        elif mahsulot.maxsulot.maxsulot_role == MaxsulotRoleChoice.RTTM:
-            mahsulotlar_by_role[MaxsulotRoleChoice.RTTM].append(mahsulot)
-
-    # Har bir mahsulot turi uchun alohida buyurtmalar yaratish yoki qo'shish
-    for role, mahsulotlar in mahsulotlar_by_role.items():
-        if mahsulotlar:
-            # Shu mahsulot turi uchun mavjud buyurtmani tekshirish
-            buyurtma = Buyurtma.objects.filter(
+            # Foydalanuvchiga mos aktiv buyurtmani topish yoki yaratish
+            buyurtma, created = Buyurtma.objects.get_or_create(
                 komendant_user=komendant_user,
-                buyurtma_role=role,
+                maxsulot_role=maxsulot_role,  # Mahsulot roli asosida
                 active=True,
-                sorov=False,
-                tasdiqlash=False
-            ).first()
+                defaults={
+                    "buyurtma_role": maxsulot_role,
+                    "prorektor": False,
+                    "bugalter": False,
+                    "omborchi": False,
+                    "rttm": False,
+                    "xojalik": False,
+                    "sorov": False,
+                    "tasdiqlash": False,
+                    "rad_etish": False,
+                    "izoh": " ",
+                }
+            )
 
-            if not buyurtma:
-                # Yangi buyurtma yaratish
-                buyurtma = Buyurtma.objects.create(
-                    komendant_user=komendant_user,
-                    buyurtma_role=role,
-                    active=True,
-                    sorov=False,
-                    tasdiqlash=False,
-                    rad_etish=False,
-                    izoh=f"{role} mahsulotlar uchun avtomatik yaratildi"
-                )
-
-            # Mahsulotlarni shu buyurtmaga qo'shish
-            for mahsulot in mahsulotlar:
-                BuyurtmaMaxsulot.objects.create(
-                    buyurtma=buyurtma,
-                    maxsulot=mahsulot.maxsulot,
-                    qiymat=mahsulot.qiymat
-                )
-
-      
+            # Mahsulotni buyurtmaga qo‘shish
+            BuyurtmaMaxsulot.objects.get_or_create(
+                buyurtma=buyurtma,
+                maxsulot=mahsulot.maxsulot,
+                defaults={"qiymat": mahsulot.qiymat}
+            )
 
 
+@receiver(post_save, sender=KorzinkaMaxsulot)
+def add_korzinka_maxsulot(sender, instance, created, **kwargs):
+    """
+    Mahsulot roliga qarab mos korzinkaga mahsulotni qo'shish.
+    """
+    if created:  # Faqat yangi yozuv yaratilganda ishlaydi
+        maxsulot = instance.maxsulot
+        user = instance.korzinka.komendant_user
 
-# @receiver(pre_delete, sender=Korzinka)
-# def add_to_buyurtma_on_korzinka_delete(sender, instance, **kwargs):
-#     komendant_user = instance.komendant_user
-#     # Buyurtma tekshiruvi
-#     buyurtma = Buyurtma.objects.filter(
-#         komendant_user=komendant_user, 
-#         active=False, 
-#         sorov=False
-#     ).first()
+        # Foydalanuvchining mahsulot roliga mos keladigan korzinkasini topish
+        korzinka, created = Korzinka.objects.get_or_create(
+            komendant_user=user,
+            maxsulot_role=maxsulot.maxsulot_role,  # Maxsulot roli asosida korzinka
+        )
 
-#     if not buyurtma:
-#         # Yangi buyurtma yaratish agar mavjud bo'lmasa
-#         buyurtma = Buyurtma.objects.create(
-#             komendant_user=komendant_user,
-#             buyurtma_role='standart',  # Kerakli rolni sozlang
-#             active=False,
-#             sorov=False,
-#             tasdiqlash=False,
-#             rad_etish=False,
-#             izoh="Korzinka o'chirilishi vaqtida avtomatik yaratildi"
-#         )
-
-#     # Korzinkaga bog'liq barcha mahsulotlarni olish
-#     korzinka_mahsulotlari = KorzinkaMaxsulot.objects.filter(korzinka=instance)
-
-#     # Har bir mahsulotni BuyurtmaMaxsulotga qo'shish
-#     for mahsulot in korzinka_mahsulotlari:
-#         BuyurtmaMaxsulot.objects.create(
-#             buyurtma=buyurtma,
-#             maxsulot=mahsulot.maxsulot,
-#             qiymat=mahsulot.qiymat
-#         )
+        # Korzinkaga mahsulotni qo'shish
+        if not KorzinkaMaxsulot.objects.filter(korzinka=korzinka, maxsulot=maxsulot).exists():
+            KorzinkaMaxsulot.objects.create(
+                korzinka=korzinka,
+                maxsulot=maxsulot,
+                qiymat=instance.qiymat,
+            )
 
 
 
+@receiver(post_save, sender=Buyurtma)
+def update_buyurtma_post_save(sender, instance, created, **kwargs):
+    """
+    Buyurtma yaratilganidan yoki yangilanganidan keyin avtomatik bog'liq o'zgarishlarni qo'llash.
+    """
+
+    if created:
+        print(f"Yangi buyurtma yaratildi: {instance.komendant_user.username} uchun")
+    else:
+        print(f"Buyurtma yangilandi: {instance.komendant_user.username} uchun")
+
+    # Bog'liq mahsulotlarni avtomatik yangilash
+    buyurtma_mahsulotlari = BuyurtmaMaxsulot.objects.filter(buyurtma=instance)
+    if buyurtma_mahsulotlari.exists():
+        for mahsulot in buyurtma_mahsulotlari:
+            if mahsulot.qiymat <= 0:
+                mahsulot.delete() 
 

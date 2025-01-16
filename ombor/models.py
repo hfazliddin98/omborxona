@@ -62,10 +62,11 @@ class JamiMahsulot(AsosiyModel):
 # korzinka
 
 class Korzinka(AsosiyModel):
-    komendant_user = models.OneToOneField(Users, on_delete=models.CASCADE)
+    komendant_user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    maxsulot_role = models.CharField(max_length=30, choices=MaxsulotRoleChoice.choices)
 
     def __str__(self):
-        return self.user.username
+        return self.komendant_user.username
     
 class KorzinkaMaxsulot(AsosiyModel):
     korzinka = models.ForeignKey(Korzinka, on_delete=models.CASCADE, related_name='korzinka')
@@ -79,15 +80,20 @@ class KorzinkaMaxsulot(AsosiyModel):
 
 class Buyurtma(AsosiyModel):
     komendant_user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    maxsulot_role = models.CharField(max_length=30, choices=MaxsulotRoleChoice.choices)
     buyurtma_role = models.CharField(max_length=30, choices=UserRoleChoice.choices)
+    prorektor = models.BooleanField(default=False)
+    bugalter = models.BooleanField(default=False)
+    omborchi = models.BooleanField(default=False)
+    rttm = models.BooleanField(default=False)
+    xojalik = models.BooleanField(default=False)
     active  = models.BooleanField(default=False)
-    sorov  = models.BooleanField(default=False)
     tasdiqlash = models.BooleanField(default=False)
     rad_etish = models.BooleanField(default=False)
     izoh = models.CharField(max_length=355, blank=True)
 
     def __str__(self):
-        return f"Buyurtma: {self.id}"
+        return self.komendant_user.username
     
 class BuyurtmaMaxsulot(AsosiyModel):
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
@@ -95,25 +101,21 @@ class BuyurtmaMaxsulot(AsosiyModel):
     qiymat = models.DecimalField(max_digits=10, decimal_places=2)   
 
     def __str__(self):
-        return self.buyurtma 
+        return self.maxsulot.name 
 
 class OlinganMaxsulot(AsosiyModel):
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
-    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
-    qiymat = models.DecimalField(max_digits=10, decimal_places=2)
-
+   
     def __str__(self):
-        return self.maxsulot.name
+        return f"{self.buyurtma} raqamli buyurtma"
 
     
 class RadEtilganMaxsulot(AsosiyModel):
     rad_etgan_user = models.ForeignKey(Users, on_delete=models.CASCADE)
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
-    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
-    qiymat = models.DecimalField(max_digits=10, decimal_places=2)
-
+   
     def __str__(self):
-        return self.maxsulot.name
+        return f"{self.buyurtma} raqamli buyurtma"
     
 class Talabnoma(models.Model):
     buyurtma = models.ForeignKey('Buyurtma', on_delete=models.CASCADE)

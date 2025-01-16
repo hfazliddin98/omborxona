@@ -40,23 +40,8 @@ class BuyurtmaAdmin(admin.ModelAdmin):
 class BuyurtmaMaxsulotAdmin(admin.ModelAdmin):
     list_display  = ['qiymat']
 
-# @admin.register(Korzinka)
-# class KorzinkaNomiAdmin(admin.ModelAdmin):
-#     list_display  = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
-#     list_filter = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
+@admin.register(Korzinka)
+class KorzinkaAdmin(admin.ModelAdmin):
+    list_display  = ['komendant_user']
 
-# @admin.register(OlinganMaxsulot)
-# class OlinganMaxsulotlarAdmin(admin.ModelAdmin):
-#     list_display  = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
-#     list_filter = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
-
-# @admin.register(RadEtilganMaxsulot)
-# class RadEtilganMaxsulotlarAdmin(admin.ModelAdmin):
-#     list_display  = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
-#     list_filter = ['buyurtma', 'maxsulot', 'qiymat', 'birlik', 'active']
-
-# @admin.register(Talabnoma)
-# class TalabnomaAdmin(admin.ModelAdmin):
-#     list_display  = ['buyurtma']
-#     list_filter = ['buyurtma']
 
