@@ -104,7 +104,7 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'OMBORXONA',
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,  # Schema faqat Swagger orqali ko'rinadi
+    'SERVE_INCLUDE_SCHEMA': True,  # Schema faqat Swagger orqali ko'rinadi
     'SWAGGER_UI_SETTINGS': {
         'persistAuthorization': True,  # Autorizatsiyani saqlash
     },
