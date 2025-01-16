@@ -8,18 +8,18 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
 from .models import OlinganMaxsulot, Buyurtma, Talabnoma, RadEtilganMaxsulot
-from .models import KorzinkaMaxsulot, BuyurtmaMaxsulot
+from .models import KorzinkaMaxsulot
 from .serializers import JamiMahsulotGetSerializer
 from .serializers import KategoriyaPostSerializer, KategoriyaGetSerializer
 from .serializers import MaxsulotGetSerializer, MaxsulotPostSerializer
 from .serializers import BuyurtmaSerializer
 from .serializers import KorzinkaMaxsulotPostSerializer
-from .serializers import KorzinkaSerializer, KorzinkaMaxsulotSerializer
+from .serializers import KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer
 from .serializers import OmborGetSerializer, OmborPostSerializer
-from .serializers import OlinganMaxsulotGetSerializer
+from .serializers import OlinganMaxsulotSerializer
 from .serializers import TalabnomaSerializer, JamiMahsulotGetSerializer
-from .serializers import RadEtilganMaxsulotGetSerializer, RadEtilganMaxsulotPostSerializer
+from .serializers import RadEtilganMaxsulotSerializer
 
 class KategoriyaViewSet(ModelViewSet):
     queryset = Kategoriya.objects.all()
@@ -86,8 +86,8 @@ class KorzinkaViewSet(ViewSet):
 
     def list(self, request):
         try:
-            queryset = Korzinka.objects.filter(komendant_user=request.user)
-            # queryset = Korzinka.objects.all()
+            # queryset = Korzinka.objects.filter(komendant_user=request.user)
+            queryset = Korzinka.objects.all()
             serializer = KorzinkaSerializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Korzinka.DoesNotExist:
@@ -152,7 +152,7 @@ class KorzinkaMaxsulotViewSet(ViewSet):
 
 class OlinganMaxsulotViewSet(ModelViewSet):
     queryset = OlinganMaxsulot.objects.all()
-    serializer_class = OlinganMaxsulotGetSerializer
+    serializer_class = OlinganMaxsulotSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['buyurtma']
 
@@ -162,12 +162,14 @@ class OlinganMaxsulotViewSet(ModelViewSet):
 
 class RadEtilganMaxsulotlarViewSet(ModelViewSet):
     queryset = RadEtilganMaxsulot.objects.all()
-    serializer_class = RadEtilganMaxsulotGetSerializer
+    serializer_class = RadEtilganMaxsulotSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['rad_etgan_user', 'buyurtma']
 
 
+
 # jami maxsulot
+
 
 class JamiMahsulotViewSet(ViewSet):
 
