@@ -117,7 +117,6 @@ class KorzinkaMaxsulotPostSerializer(ModelSerializer):
 
 
 class KorzinkaSerializer(ModelSerializer):
-    komendant_user = UserGetSerializer()
     maxsulotlar = KorzinkaMaxsulotSerializer(many=True, read_only=True)
 
     class Meta:
