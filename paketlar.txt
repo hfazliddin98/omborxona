@@ -15,4 +15,8 @@ django-cors-headers
 django-filter
 djangorestframework
 djangorestframework-simplejwt
-drf-yasg
+
+
+
+drf-spectacular
+drf_spectacular_sidecar

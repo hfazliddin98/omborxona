@@ -5,7 +5,7 @@ from .views import KategoriyaViewSet, MaxsulotViewSet, BirlikViewSet, OmborniYop
 from .views import OlinganMaxsulotViewSet, BuyurtmaViewSet
 from .views import KategoriyaWithJamiMahsulotView, RadEtilganMaxsulotlarViewSet, TalabnomaViewSet
 from .views import KorzinkaAPIView, KorzinkaDestroyAPIView, KorzinkaMaxsulotAPIView, KorzinkaMaxsulotDestroyAPIView
-
+from .views import KorzinkaViewSet, KorzinkaMaxsulotViewSet
 
 router = SimpleRouter()
 router.register(r'kategoriya', KategoriyaViewSet, basename='kategoriya')
@@ -18,14 +18,16 @@ router.register(r'buyurtma_maxsulot', BuyurtmaMaxsulotViewSet, basename='buyurtm
 router.register(r'olingan_maxsulotlar', OlinganMaxsulotViewSet, basename='olingan_maxsulotlar')
 router.register(r'rad_etilgan_maxsulotlar', RadEtilganMaxsulotlarViewSet, basename='rad_etilgan_maxsulotlar')
 router.register(r'talabnoma', TalabnomaViewSet, basename='talabnoma')
+router.register(r'korzinka', KorzinkaViewSet, basename='korzinka')
+router.register(r'korzinka_maxsulot', KorzinkaMaxsulotViewSet, basename='korzinka_maxsulot')
 
 
 urlpatterns = [
     path('jami_maxsulotlar/', KategoriyaWithJamiMahsulotView.as_view(), name='jami_maxsulotlar'),
-    path('korzinka/', KorzinkaAPIView.as_view(), name='korzinka_list'),
-    path('korzinka/<uuid:pk>/', KorzinkaDestroyAPIView.as_view(), name='korzinka_destroy'),
+    # path('korzinka/', KorzinkaAPIView.as_view(), name='korzinka_list'),
+    # path('korzinka/<uuid:pk>/', KorzinkaDestroyAPIView.as_view(), name='korzinka_destroy'),
     # path('korzinka_maxsulot/', KorzinkaMaxsulotAPIView.as_view(), name='korzinka_maxsulot')
-    path('korzinka_maxsulot/', KorzinkaMaxsulotAPIView.as_view(), name='korzinka_maxsulot_list'),
-    path('korzinka_maxsulot/<uuid:pk>/', KorzinkaMaxsulotDestroyAPIView.as_view(), name='korzinka_maxsulot_destroy'),
+    # path('korzinka_maxsulot/', KorzinkaMaxsulotAPIView.as_view(), name='korzinka_maxsulot_list'),
+    # path('korzinka_maxsulot/<uuid:pk>/', KorzinkaMaxsulotDestroyAPIView.as_view(), name='korzinka_maxsulot_destroy'),
 ]
 urlpatterns += router.urls

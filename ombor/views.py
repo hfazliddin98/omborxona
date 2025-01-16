@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework import filters
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
 from .models import OlinganMaxsulot, Buyurtma, Talabnoma, RadEtilganMaxsulot
 from .models import KorzinkaMaxsulot, BuyurtmaMaxsulot
@@ -54,6 +54,7 @@ class BirlikViewSet(ModelViewSet):
 class OmborniYopishViewSet(ModelViewSet):
     queryset = OmborniYopish.objects.all()
     serializer_class = OmborniYopishSerializer
+    http_method_names = ['get', 'post', 'patch']
 
 
 class OmborViewSet(ModelViewSet):
@@ -84,6 +85,9 @@ class BuyurtmaMaxsulotViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['buyurtma', 'maxsulot', 'qiymat']
 
+    # Ruxsat berilgan HTTP metodlari
+    # http_method_names = ['get', 'post', 'patch']
+
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:  # GET uchun
             return BuyurtmaMaxsulotGetSerializer
@@ -91,6 +95,65 @@ class BuyurtmaMaxsulotViewSet(ModelViewSet):
 
 
 # korzinka
+
+
+class KorzinkaViewSet(ViewSet):
+
+    def list(self, request):
+        try:
+            queryset = Korzinka.objects.get(komendant_user=request.user)
+            serializer = KorzinkaSerializer(queryset)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Korzinka.DoesNotExist:
+            return Response({"error": "Korzinka topilmadi."}, status=status.HTTP_404_NOT_FOUND)
+        
+    def destroy(self, request, pk=None):
+        try:
+            queryset = Korzinka.objects.get(pk=pk)
+            queryset.delete()  # This actually deletes the object
+            return Response({"message": "Korzinka o`chirildi."}, status=status.HTTP_204_NO_CONTENT)  # HTTP 204 for successful deletion
+        except Korzinka.DoesNotExist:
+            return Response({"error": "Korzinka topilmadi."}, status=status.HTTP_404_NOT_FOUND)  # Handle the case if not found
+
+class KorzinkaMaxsulotViewSet(ViewSet):
+
+    def create(self, request):
+        # Foydalanuvchining korzinkasini olish yoki yaratish
+        korzinka, created = Korzinka.objects.get_or_create(komendant_user=request.user)
+
+        # Serializer bilan validatsiya
+        serializer = KorzinkaMaxsulotPostSerializer(data=request.data)
+        
+        # Agar serializer to'g'ri bo'lsa, mahsulotni korzinkaga qo'shamiz
+        if serializer.is_valid():
+            # Maxsulot mavjudligini tekshirish
+            maxsulot = serializer.validated_data['maxsulot']
+            if KorzinkaMaxsulot.objects.filter(korzinka=korzinka, maxsulot=maxsulot).exists():
+                return Response({"error": "Ushbu mahsulot allaqachon sizning korzinkangizda mavjud."}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Mahsulotni korzinkaga qo'shish
+            KorzinkaMaxsulot.objects.create(
+                korzinka=korzinka,
+                maxsulot=maxsulot,
+                qiymat=serializer.validated_data['qiymat'],
+            )
+            
+            # Yaratilgan yoki mavjud bo'lgan korzinkaga mahsulot qo'shildi degan xabar
+            message = "Korzinka yaratildi va mahsulot muvaffaqiyatli qo'shildi." if created else "Mahsulot muvaffaqiyatli qo'shildi."
+            return Response({"message": message}, status=status.HTTP_201_CREATED)
+        
+        # Agar serializerda xatolik bo'lsa, 400 (Bad Request) javobini qaytarish
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    def destroy(self, request, pk=None):
+        try:
+            queryset = KorzinkaMaxsulot.objects.get(pk=pk)
+            queryset.delete()  # This actually deletes the object
+            return Response({"message": "KorzinkaMaxsulot o`chirildi."}, status=status.HTTP_204_NO_CONTENT)  # HTTP 204 for successful deletion
+        except KorzinkaMaxsulot.DoesNotExist:
+            return Response({"error": "KorzinkaMaxsulot topilmadi."}, status=status.HTTP_404_NOT_FOUND)  # Handle the case if not found
+
 
 class KorzinkaAPIView(APIView):
 

@@ -37,9 +37,10 @@ INSTALLED_APPS = [
 
     # app
     'rest_framework',
-    'drf_yasg',
     'corsheaders',
     'dbbackup', 
+    'drf_spectacular',
+    'drf_spectacular_sidecar', 
 
     # men qoshgan app
     'ombor',
@@ -95,6 +96,32 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     # 'PAGE_SIZE': 120
 
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'OMBORXONA',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,  # Schema faqat Swagger orqali ko'rinadi
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True,  # Autorizatsiyani saqlash
+    },
+    'COMPONENT_SPLIT_REQUEST': True,
+
+    
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'http',
+            'scheme': 'bearer',
+            'bearerFormat': 'JWT',
+        },
+    },
 }
 
 
@@ -106,7 +133,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://omborxona2024.pythonanywhere.com",     
     "https://omborxona2024.pythonanywhere.com",
 ]
-
 
 
 

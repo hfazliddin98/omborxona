@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Kategoriya, Maxsulot, Birlik
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka, JamiMahsulot
-from .models import OlinganMaxsulot, Buyurtma, RadEtilganMaxsulot, Talabnoma
+from .models import OlinganMaxsulot, Buyurtma, RadEtilganMaxsulot, Talabnoma, BuyurtmaMaxsulot
 
 
 @admin.register(Kategoriya)
@@ -32,10 +32,13 @@ class JamiMahsulotAdmin(admin.ModelAdmin):
     list_display  = ['id', 'maxsulot', 'qiymat']
     
 
-# @admin.register(Buyurtma)
-# class BuyurtmaAdmin(admin.ModelAdmin):
-#     list_display  = ['user', 'active']
-#     list_filter  = ['user', 'active']
+@admin.register(Buyurtma)
+class BuyurtmaAdmin(admin.ModelAdmin):
+    list_display  = ['komendant_user']
+
+@admin.register(BuyurtmaMaxsulot)
+class BuyurtmaMaxsulotAdmin(admin.ModelAdmin):
+    list_display  = ['qiymat']
 
 # @admin.register(Korzinka)
 # class KorzinkaNomiAdmin(admin.ModelAdmin):

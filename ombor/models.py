@@ -36,25 +36,7 @@ class Maxsulot(AsosiyModel):
     def __str__(self):
         return self.name
 
-# buyurtma
-
-class Buyurtma(AsosiyModel):
-    komendant_user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    buyurtma_role = models.CharField(max_length=30, choices=UserRoleChoice.choices)
-    tasdiqlash = models.BooleanField(default=False)
-    rad_etish = models.BooleanField(default=False)
-    izoh = models.CharField(max_length=355, blank=True)
-
-    def __str__(self):
-        return self.user.username   
-    
-class BuyurtmaMaxsulot(AsosiyModel):
-    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
-    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
-    qiymat = models.DecimalField(max_digits=10, decimal_places=2)   
-
-    def __str__(self):
-        return self.user.username   
+  
 
 class OmborniYopish(AsosiyModel):
     yopish = models.BooleanField(default=False)
@@ -75,13 +57,6 @@ class JamiMahsulot(AsosiyModel):
     def __str__(self):
         return self.maxsulot.name 
 
-class OlinganMaxsulot(AsosiyModel):
-    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
-    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
-    qiymat = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return self.maxsulot.name
 
 
 # korzinka
@@ -99,7 +74,36 @@ class KorzinkaMaxsulot(AsosiyModel):
 
     def __str__(self):
         return self.maxsulot.name
+    
+# buyurtma
 
+class Buyurtma(AsosiyModel):
+    komendant_user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    buyurtma_role = models.CharField(max_length=30, choices=UserRoleChoice.choices)
+    active  = models.BooleanField(default=False)
+    sorov  = models.BooleanField(default=False)
+    tasdiqlash = models.BooleanField(default=False)
+    rad_etish = models.BooleanField(default=False)
+    izoh = models.CharField(max_length=355, blank=True)
+
+    def __str__(self):
+        return f"Buyurtma: {self.id}"
+    
+class BuyurtmaMaxsulot(AsosiyModel):
+    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
+    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
+    qiymat = models.DecimalField(max_digits=10, decimal_places=2)   
+
+    def __str__(self):
+        return self.buyurtma 
+
+class OlinganMaxsulot(AsosiyModel):
+    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
+    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
+    qiymat = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.maxsulot.name
 
     
 class RadEtilganMaxsulot(AsosiyModel):
