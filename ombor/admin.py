@@ -48,4 +48,8 @@ class KorzinkaAdmin(admin.ModelAdmin):
 class OlinganMaxsulotAdmin(admin.ModelAdmin):
     list_display  = ['buyurtma']
 
+@admin.register(RadEtilganMaxsulot)
+class RadEtilganMaxsulotAdmin(admin.ModelAdmin):
+    list_display  = ['buyurtma']
+
 

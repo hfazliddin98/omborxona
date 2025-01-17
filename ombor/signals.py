@@ -1,10 +1,12 @@
+import requests
 from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
 from django.db.models import Sum
 from django.dispatch import receiver
 from decimal import Decimal
-from .models import Ombor, JamiMahsulot, OlinganMaxsulot
+from .models import Ombor, JamiMahsulot, OlinganMaxsulot, RadEtilganMaxsulot
 from .models import Korzinka, KorzinkaMaxsulot, Buyurtma, BuyurtmaMaxsulot
 from users.choices import MaxsulotRoleChoice, UserRoleChoice
+from users.middleware import get_current_request
 
 
 @receiver(post_save, sender=Ombor)
@@ -150,6 +152,16 @@ def update_buyurtma_pre_save(sender, instance, **kwargs):
             # `omborchi = True` bo'lganda `OlinganMaxsulot` obyektini yaratish
             if not OlinganMaxsulot.objects.filter(buyurtma=instance).exists():
                 OlinganMaxsulot.objects.create(buyurtma=instance)
+                print(f"OlinganMaxsulot yaratildi: {instance} uchun.")
+
+        if instance.rad_etish:
+            instance.active = False
+
+            request = get_current_request()
+
+            # `omborchi = True` bo'lganda `RadEtilganMaxsulot` obyektini yaratish
+            if not RadEtilganMaxsulot.objects.filter(buyurtma=instance).exists():
+                RadEtilganMaxsulot.objects.create(buyurtma=instance, rad_etgan_user=request.user)
                 print(f"OlinganMaxsulot yaratildi: {instance} uchun.")
 
 
