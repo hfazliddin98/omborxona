@@ -76,7 +76,7 @@ class BuyurtmaViewSet(ModelViewSet):
     serializer_class = BuyurtmaSerializer
     http_method_names = ['get', 'patch']
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['tasdiqlash', 'rad_etish']
+    filterset_fields = ['komendant_user', 'tasdiqlash', 'rad_etish']
 
 
 
