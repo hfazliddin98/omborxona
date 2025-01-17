@@ -95,9 +95,9 @@ class BuyurtmaSerializer(ModelSerializer):
     class Meta:
         model = Buyurtma
         fields = [
-            'id', 'komendant_user', 'maxsulot_role', 'buyurtma_role', 'maxsulotlar', 
+            'id', 'komendant_user', 'buyurtma_role', 'maxsulotlar', 
             'prorektor', 'bugalter', 'omborchi', 'rttm', 'xojalik',
-            'tasdiqlash', 'rad_etish', 'izoh', 'created_at'
+            'rad_etish', 'izoh', 'created_at'
             ]
 
 
