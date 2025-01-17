@@ -105,6 +105,7 @@ class BuyurtmaMaxsulot(AsosiyModel):
 
 class OlinganMaxsulot(AsosiyModel):
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
+    active  = models.BooleanField(default=True)
    
     def __str__(self):
         return f"{self.buyurtma} raqamli buyurtma"
@@ -113,6 +114,7 @@ class OlinganMaxsulot(AsosiyModel):
 class RadEtilganMaxsulot(AsosiyModel):
     rad_etgan_user = models.ForeignKey(Users, on_delete=models.CASCADE)
     buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
+    active  = models.BooleanField(default=True)
    
     def __str__(self):
         return f"{self.buyurtma} raqamli buyurtma"

@@ -18,9 +18,9 @@ from .serializers import KorzinkaMaxsulotPostSerializer
 from .serializers import KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer
 from .serializers import OmborGetSerializer, OmborPostSerializer
-from .serializers import OlinganMaxsulotSerializer
+from .serializers import OlinganMaxsulotSerializer, OlinganMaxsulotPostSerializer
 from .serializers import TalabnomaSerializer, JamiMahsulotGetSerializer
-from .serializers import RadEtilganMaxsulotSerializer
+from .serializers import RadEtilganMaxsulotSerializer, RadEtilganMaxsulotPostSerializer
 
 class KategoriyaViewSet(ModelViewSet):
     queryset = Kategoriya.objects.all()
@@ -134,10 +134,14 @@ class KorzinkaMaxsulotViewSet(ModelViewSet):
 
 class OlinganMaxsulotViewSet(ModelViewSet):
     queryset = OlinganMaxsulot.objects.all()
-    serializer_class = OlinganMaxsulotSerializer
-    http_method_names = ['get']
+    http_method_names = ['get', 'patch']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['buyurtma']
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:  # GET uchun
+            return OlinganMaxsulotSerializer
+        return OlinganMaxsulotPostSerializer  # POST, PUT, PATCH uchun
 
 
 
@@ -145,10 +149,14 @@ class OlinganMaxsulotViewSet(ModelViewSet):
 
 class RadEtilganMaxsulotlarViewSet(ModelViewSet):
     queryset = RadEtilganMaxsulot.objects.all()
-    serializer_class = RadEtilganMaxsulotSerializer
-    http_method_names = ['get']
+    http_method_names = ['get', 'patch']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['rad_etgan_user', 'buyurtma']
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:  # GET uchun
+            return RadEtilganMaxsulotSerializer
+        return RadEtilganMaxsulotPostSerializer  # POST, PUT, PATCH uchun
 
 
 
