@@ -95,8 +95,7 @@ class KorzinkaMaxsulotViewSet(ModelViewSet):
     queryset = KorzinkaMaxsulot.objects.all()
     serializer_class = KorzinkaMaxsulotPostSerializer
     http_method_names = ['post', 'delete']
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['komendant_user', 'maxsulot_role']
+    
 
     def perform_create(self, serializer):
         maxsulot = serializer.validated_data['maxsulot']

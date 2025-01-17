@@ -44,4 +44,8 @@ class BuyurtmaMaxsulotAdmin(admin.ModelAdmin):
 class KorzinkaAdmin(admin.ModelAdmin):
     list_display  = ['komendant_user']
 
+@admin.register(OlinganMaxsulot)
+class OlinganMaxsulotAdmin(admin.ModelAdmin):
+    list_display  = ['buyurtma']
+
 

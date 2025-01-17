@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
 from django.db.models import Sum
 from django.dispatch import receiver
 from decimal import Decimal
@@ -48,25 +48,25 @@ def update_jami_mahsulot_on_delete(sender, instance, **kwargs):
 
 
 
-@receiver(post_save, sender=OlinganMaxsulot)
-@receiver(post_delete, sender=OlinganMaxsulot)
-def update_jami_mahsulot_on_olingan(sender, instance, **kwargs):
-    # JamiMahsulot obyektini olish yoki yaratish
-    jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
+# @receiver(post_save, sender=OlinganMaxsulot)
+# @receiver(post_delete, sender=OlinganMaxsulot)
+# def update_jami_mahsulot_on_olingan(sender, instance, **kwargs):
+#     # JamiMahsulot obyektini olish yoki yaratish
+#     jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
 
-    # Ombordagi mahsulot qiymatini hisoblash
-    jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
-        total_qiymat=Sum('qiymat')
-    )['total_qiymat'] or Decimal('0.00')
+#     # Ombordagi mahsulot qiymatini hisoblash
+#     jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
+#         total_qiymat=Sum('qiymat')
+#     )['total_qiymat'] or Decimal('0.00')
     
-    # OlinganMaxsulot qiymatini hisoblash
-    olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
-        total_qiymat=Sum('qiymat')
-    )['total_qiymat'] or Decimal('0.00')
+#     # OlinganMaxsulot qiymatini hisoblash
+#     olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
+#         total_qiymat=Sum('qiymat')
+#     )['total_qiymat'] or Decimal('0.00')
 
-    # JamiMahsulot qiymatini yangilash
-    jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
-    jami_mahsulot.save()
+#     # JamiMahsulot qiymatini yangilash
+#     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+#     jami_mahsulot.save()
 
  
 
@@ -130,27 +130,32 @@ def add_korzinka_maxsulot(sender, instance, created, **kwargs):
             )
 
 
-
-@receiver(post_save, sender=Buyurtma)
-def update_buyurtma_post_save(sender, instance, created, **kwargs):
+@receiver(pre_save, sender=Buyurtma)
+def update_buyurtma_pre_save(sender, instance, **kwargs):
     """
-    Buyurtma yaratilganidan yoki yangilanganidan keyin avtomatik bog'liq o'zgarishlarni qo'llash.
+    Buyurtma yaratilganda yoki yangilanganida avtomatik qiymatlarni o'zgartirish.
     """
-
     # Faqat mavjud bo'lgan obyektni yangilashda ishlaydi
-    if not created:
-        if instance.rttm == True or instance.xojalik == True:
+    if instance.pk:  # Obyekt allaqachon mavjud bo'lsa (yangilash jarayoni)
+        if instance.rttm or instance.xojalik:
             instance.buyurtma_role = UserRoleChoice.PROREKTOR
-       
-      
+        if instance.prorektor:
+            instance.buyurtma_role = UserRoleChoice.BUGALTER
+        if instance.bugalter:
+            instance.buyurtma_role = UserRoleChoice.OMBORCHI
+        if instance.omborchi:
+            instance.active = False
+            instance.tasdiqlash = True
 
-        # Yangi qiymatni saqlash
-        instance.save()
+            # `omborchi = True` bo'lganda `OlinganMaxsulot` obyektini yaratish
+            if not OlinganMaxsulot.objects.filter(buyurtma=instance).exists():
+                OlinganMaxsulot.objects.create(buyurtma=instance)
+                print(f"OlinganMaxsulot yaratildi: {instance} uchun.")
 
-    # Bog'liq mahsulotlarni avtomatik yangilash
+
+    # Bog'liq mahsulotlarni avtomatik yangilash (faqat validatsiya uchun)
     buyurtma_mahsulotlari = BuyurtmaMaxsulot.objects.filter(buyurtma=instance)
-    if buyurtma_mahsulotlari.exists():
-        for mahsulot in buyurtma_mahsulotlari:
-            if mahsulot.qiymat <= 0:
-                mahsulot.delete() 
+    for mahsulot in buyurtma_mahsulotlari:
+        if mahsulot.qiymat <= 0:
+            mahsulot.delete()
 
