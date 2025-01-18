@@ -71,8 +71,8 @@ def add_korzinka_maxsulot(sender, instance, created, **kwargs):
             )
 
 
-@receiver(pre_save, sender=Buyurtma)
-def update_buyurtma_pre_save(sender, instance, **kwargs):
+@receiver(post_save, sender=Buyurtma)
+def update_buyurtma_post_save(sender, instance, **kwargs):
     """
     Buyurtma yaratilganda yoki yangilanganida avtomatik qiymatlarni o'zgartirish.
     """
