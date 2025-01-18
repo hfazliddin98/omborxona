@@ -134,14 +134,14 @@ class Talabnoma(models.Model):
         template_path = 'talabnoma.html'
 
         # malumotlarni chaqirish
-        maxsulotlar = OlinganMaxsulot.objects.filter(buyurtma=buyurtma)
+        maxsulotlar = BuyurtmaMaxsulot.objects.filter(buyurtma=buyurtma)
         prorektor = Users.objects.filter(role=UserRoleChoice.PROREKTOR).first()
         bugalter = Users.objects.filter(role=UserRoleChoice.BUGALTER).first()
         xojalik = Users.objects.filter(role=UserRoleChoice.XOJALIK).first()
         rttm = Users.objects.filter(role=UserRoleChoice.RTTM).first()
         omborchi = Users.objects.filter(role=UserRoleChoice.OMBORCHI).first()
-        komendant = f'{buyurtma.user.last_name} {buyurtma.user.first_name}'
-        bino = f'{buyurtma.user.bino}'
+        komendant = f'{buyurtma.komendant_user.last_name} {buyurtma.komendant_user.first_name}'
+        bino = f'{buyurtma.komendant_user.bino}'
         sana = buyurtma.created_at
 
         # QR Kod yaratish

@@ -40,7 +40,7 @@
                 <tr>
                     <td style="text-align: center; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto; width: 6%;" >{{ forloop.counter }}</td>
                     <td style="text-align: left; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto; ">{{m.maxsulot}}</td>
-                    <td style="text-align: center; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto; width: 20%;">{{m.qiymat}} {{m.birlik}}</td>
+                    <td style="text-align: center; font-size: 14px; border: 1px solid #000;  padding: 5px;line-height: 1.2;vertical-align: auto; width: 20%;">{{m.qiymat}} {{m.maxsulot.birlik}}</td>
                 </tr>
                 {% endfor %}
 
@@ -61,19 +61,19 @@
             {{bugalter.last_name}}  {{bugalter.first_name}}
         </p>
         
-        {% if xojalik_bolimi %}
+        {% if xojalik %}
             <p style="align-items: center;">
                 <img src="{{xojalik_bolimi.qr_code_link}}" width="40" height="40">
                 <strong>Xo`jalik bo`limi : </strong>
-                {{xojalik_bolimi.last_name}}  {{xojalik_bolimi.first_name}}
+                {{xojalik.last_name}}  {{xojalik.first_name}}
             </p>
         {% endif %}
 
-        {% if it_park %}
+        {% if rttm %}
             <p style="align-items: center;">
                 <img src="{{it_park.qr_code_link}}" width="40" height="40">
                 <strong>IT Park : </strong>
-                {{it_park.last_name}}  {{it_park.first_name}}
+                {{rttm.last_name}}  {{rttm.first_name}}
             </p>
         {% endif %}
         

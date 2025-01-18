@@ -4,7 +4,7 @@ from django.db.models import Sum
 from django.dispatch import receiver
 from decimal import Decimal
 from .models import Ombor, JamiMahsulot, OlinganMaxsulot, RadEtilganMaxsulot
-from .models import Korzinka, KorzinkaMaxsulot, Buyurtma, BuyurtmaMaxsulot
+from .models import Korzinka, KorzinkaMaxsulot, Buyurtma, BuyurtmaMaxsulot, Talabnoma
 from users.choices import MaxsulotRoleChoice, UserRoleChoice
 from users.middleware import get_current_request
 
@@ -71,8 +71,8 @@ def add_korzinka_maxsulot(sender, instance, created, **kwargs):
             )
 
 
-@receiver(post_save, sender=Buyurtma)
-def update_buyurtma_post_save(sender, instance, **kwargs):
+@receiver(pre_save, sender=Buyurtma)
+def update_buyurtma_pre_save(sender, instance, **kwargs):
     """
     Buyurtma yaratilganda yoki yangilanganida avtomatik qiymatlarni o'zgartirish.
     """
@@ -91,6 +91,9 @@ def update_buyurtma_post_save(sender, instance, **kwargs):
             if not OlinganMaxsulot.objects.filter(buyurtma=instance).exists():
                 OlinganMaxsulot.objects.create(buyurtma=instance)
 
+            if not Talabnoma.objects.filter(buyurtma=instance).exists():
+                Talabnoma.objects.create(buyurtma=instance)
+
             # Buyurtma bilan bog‘liq barcha mahsulotlarni olish
             buyurtma_maxsulotlar = BuyurtmaMaxsulot.objects.filter(buyurtma=instance)
 
@@ -104,7 +107,7 @@ def update_buyurtma_post_save(sender, instance, **kwargs):
 
                 # Olingan qiymatlarni hisoblash
                 olingan_qiymat = OlinganMaxsulot.objects.filter(
-                    buyurtma=instance
+                    buyurtma=buyurtma_maxsulot.buyurtma
                 ).filter(buyurtma__tasdiqlash=True).exclude(id=instance.id).aggregate(
                     total_qiymat=Sum('buyurtma__maxsulotlar__qiymat')
                 )['total_qiymat'] or Decimal('0.00')

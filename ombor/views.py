@@ -163,19 +163,42 @@ class RadEtilganMaxsulotlarViewSet(ModelViewSet):
 # jami maxsulot
 
 
-class JamiMahsulotViewSet(ViewSet):
+# class JamiMahsulotViewSet(ViewSet):
+
+#     def list(self, request):
+#         """
+#         Jami mahsulotlar ro'yxatini GET orqali chiqarish.
+#         """
+#         try:
+#             queryset = Kategoriya.objects.all()
+#             serializer = JamiMahsulotGetSerializer(queryset, many=True)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         except Kategoriya.DoesNotExist:
+#             return Response({"error": " maxsulot topilmadi."}, status=status.HTTP_404_NOT_FOUND)
+    
+
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from decimal import Decimal
+from django.db.models import Sum
+from .models import BuyurtmaMaxsulot, Ombor, OlinganMaxsulot, JamiMahsulot
+from .serializers import JamiMahsulotGetSerializer
+
+class JamiMahsulotViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """
-        Jami mahsulotlar ro'yxatini GET orqali chiqarish.
+        Barcha mahsulotlar ro'yxatini GET orqali chiqarish va hisoblash.
         """
         try:
-            queryset = Kategoriya.objects.all()
+            # Barcha JamiMahsulotlarni JSON formatida qaytarish
+            queryset = Kategoriya.objects.all() # JamiMahsulotlar ro'yxati
             serializer = JamiMahsulotGetSerializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except Kategoriya.DoesNotExist:
-            return Response({"error": " maxsulot topilmadi."}, status=status.HTTP_404_NOT_FOUND)
-    
+
+        except BuyurtmaMaxsulot.DoesNotExist:
+            return Response({"error": "Maxsulot topilmadi."}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 

@@ -52,4 +52,8 @@ class OlinganMaxsulotAdmin(admin.ModelAdmin):
 class RadEtilganMaxsulotAdmin(admin.ModelAdmin):
     list_display  = ['buyurtma']
 
+@admin.register(Talabnoma)
+class TalabnomaAdmin(admin.ModelAdmin):
+    list_display  = ['buyurtma']
+
 
