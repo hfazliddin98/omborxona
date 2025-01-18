@@ -10,101 +10,6 @@ from users.middleware import get_current_request
 
 
 
-@receiver([pre_save, pre_delete], sender=OlinganMaxsulot)
-def update_jami_mahsulot_on_pre_save_or_delete(sender, instance, **kwargs):
-    """
-    OlinganMaxsulot qo'shilishidan yoki o'chirilishidan avval JamiMahsulot qiymatini yangilash.
-    """
-    # Buyurtma orqali bog‘liq mahsulotlarni olish
-    buyurtma_maxsulotlar = BuyurtmaMaxsulot.objects.filter(buyurtma=instance.buyurtma)
-
-    # Jami qiymatlarni hisoblash uchun boshlang‘ich qiymat
-    jami_qiymat = Decimal('0.00')
-    olingan_qiymat = Decimal('0.00')
-
-    # Ombordagi mahsulotlarning umumiy qiymatini hisoblash
-    for buyurtma_maxsulot in buyurtma_maxsulotlar:
-        jami_qiymat += Ombor.objects.filter(maxsulot=buyurtma_maxsulot.maxsulot).aggregate(
-            total_qiymat=Sum('qiymat')
-        )['total_qiymat'] or Decimal('0.00')
-
-    # OlinganMaxsulot qiymatlarini hisoblash
-    for buyurtma_maxsulot in buyurtma_maxsulotlar:
-        olingan_qiymat += OlinganMaxsulot.objects.filter(
-            buyurtma=instance.buyurtma
-        ).exclude(id=instance.id).aggregate(
-            total_qiymat=Sum('buyurtma__maxsulotlar__qiymat')
-        )['total_qiymat'] or Decimal('0.00')
-
-    # JamiMahsulot qiymatini yangilash
-    for buyurtma_maxsulot in buyurtma_maxsulotlar:
-        jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=buyurtma_maxsulot.maxsulot)
-        jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
-        jami_mahsulot.save()
-
-
-# @receiver(post_save, sender=Ombor)
-# def update_jami_mahsulot_on_save(sender, instance, created, **kwargs):
-#     # JamiMahsulot obyektini olish yoki yaratish
-#     jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
-    
-#     # Ombordagi mahsulot qiymatini hisoblash
-#     jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
-#         total_qiymat=Sum('qiymat')
-#     )['total_qiymat'] or Decimal('0.00')
-    
-#     # OlinganMaxsulot qiymatini hisoblash
-#     olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
-#         total_qiymat=Sum('qiymat')
-#     )['total_qiymat'] or Decimal('0.00')
-
-#     # JamiMahsulot qiymatini yangilash
-#     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
-#     jami_mahsulot.save()
-
-
-# @receiver(post_delete, sender=Ombor)
-# def update_jami_mahsulot_on_delete(sender, instance, **kwargs):
-#     # JamiMahsulot obyektini olish yoki yaratish
-#     jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
-    
-#     # Ombordagi mahsulot qiymatini hisoblash
-#     jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
-#         total_qiymat=Sum('qiymat')
-#     )['total_qiymat'] or Decimal('0.00')
-    
-#     # OlinganMaxsulot qiymatini hisoblash
-#     olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
-#         total_qiymat=Sum('qiymat')
-#     )['total_qiymat'] or Decimal('0.00')
-
-#     # JamiMahsulot qiymatini yangilash
-#     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
-#     jami_mahsulot.save()
-
-
-
-# @receiver(post_save, sender=OlinganMaxsulot)
-# @receiver(post_delete, sender=OlinganMaxsulot)
-# def update_jami_mahsulot_on_olingan(sender, instance, **kwargs):
-#     # JamiMahsulot obyektini olish yoki yaratish
-#     jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
-
-#     # Ombordagi mahsulot qiymatini hisoblash
-#     jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
-#         total_qiymat=Sum('qiymat')
-#     )['total_qiymat'] or Decimal('0.00')
-    
-#     # OlinganMaxsulot qiymatini hisoblash
-#     olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
-#         total_qiymat=Sum('qiymat')
-#     )['total_qiymat'] or Decimal('0.00')
-
-#     # JamiMahsulot qiymatini yangilash
-#     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
-#     jami_mahsulot.save()
-
- 
 
 @receiver(pre_delete, sender=Korzinka)
 def add_to_buyurtma_on_korzinka_delete(sender, instance, **kwargs):
@@ -185,6 +90,31 @@ def update_buyurtma_pre_save(sender, instance, **kwargs):
 
             if not OlinganMaxsulot.objects.filter(buyurtma=instance).exists():
                 OlinganMaxsulot.objects.create(buyurtma=instance)
+
+            # Buyurtma bilan bog‘liq barcha mahsulotlarni olish
+            buyurtma_maxsulotlar = BuyurtmaMaxsulot.objects.filter(buyurtma=instance)
+
+            # OlinganMaxsulot qiymatlarini hisoblash
+            for buyurtma_maxsulot in buyurtma_maxsulotlar:
+
+                # Ombordagi jami mahsulot qiymatini hisoblash
+                jami_qiymat = Ombor.objects.filter(maxsulot=buyurtma_maxsulot.maxsulot).aggregate(
+                    total_qiymat=Sum('qiymat')
+                )['total_qiymat'] or Decimal('0.00')
+
+                # Olingan qiymatlarni hisoblash
+                olingan_qiymat = OlinganMaxsulot.objects.filter(
+                    buyurtma=instance
+                ).exclude(id=instance.id).aggregate(
+                    total_qiymat=Sum('buyurtma__maxsulotlar__qiymat')
+                )['total_qiymat'] or Decimal('0.00')
+
+                # JamiMahsulotni yangilash
+                jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=buyurtma_maxsulot.maxsulot)
+                jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+                jami_mahsulot.save()
+
+
 
         if instance.rad_etish:
             instance.active = False
