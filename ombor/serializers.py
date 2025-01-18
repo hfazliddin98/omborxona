@@ -139,7 +139,7 @@ class OlinganMaxsulotSerializer(ModelSerializer):
     buyurtma = KeyingiMaxsulotSerializer()
     class Meta:
         model = OlinganMaxsulot
-        fields = ['id', 'buyurtma', 'created_at']
+        fields = ['id', 'buyurtma', 'active', 'created_at']
 
 class OlinganMaxsulotPostSerializer(ModelSerializer):
     class Meta:
@@ -154,7 +154,7 @@ class RadEtilganMaxsulotSerializer(ModelSerializer):
     buyurtma = KeyingiMaxsulotSerializer()
     class Meta:
         model = RadEtilganMaxsulot
-        fields = ['id', 'rad_etgan_user', 'buyurtma', 'created_at']
+        fields = ['id', 'rad_etgan_user', 'buyurtma', 'active', 'created_at']
 
 class RadEtilganMaxsulotPostSerializer(ModelSerializer):
     class Meta:

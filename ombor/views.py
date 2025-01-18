@@ -136,7 +136,7 @@ class OlinganMaxsulotViewSet(ModelViewSet):
     queryset = OlinganMaxsulot.objects.all()
     http_method_names = ['get', 'patch']
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['buyurtma']
+    filterset_fields = ['buyurtma__komendant_user']
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:  # GET uchun
@@ -151,7 +151,7 @@ class RadEtilganMaxsulotlarViewSet(ModelViewSet):
     queryset = RadEtilganMaxsulot.objects.all()
     http_method_names = ['get', 'patch']
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['rad_etgan_user', 'buyurtma']
+    filterset_fields = ['buyurtma__komendant_user']
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:  # GET uchun

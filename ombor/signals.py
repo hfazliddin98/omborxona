@@ -9,44 +9,78 @@ from users.choices import MaxsulotRoleChoice, UserRoleChoice
 from users.middleware import get_current_request
 
 
-@receiver(post_save, sender=Ombor)
-def update_jami_mahsulot_on_save(sender, instance, created, **kwargs):
-    # JamiMahsulot obyektini olish yoki yaratish
-    jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
-    
-    # Ombordagi mahsulot qiymatini hisoblash
-    jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
-        total_qiymat=Sum('qiymat')
-    )['total_qiymat'] or Decimal('0.00')
-    
-    # OlinganMaxsulot qiymatini hisoblash
-    olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
-        total_qiymat=Sum('qiymat')
-    )['total_qiymat'] or Decimal('0.00')
+
+@receiver([pre_save, pre_delete], sender=OlinganMaxsulot)
+def update_jami_mahsulot_on_pre_save_or_delete(sender, instance, **kwargs):
+    """
+    OlinganMaxsulot qo'shilishidan yoki o'chirilishidan avval JamiMahsulot qiymatini yangilash.
+    """
+    # Buyurtma orqali bog‘liq mahsulotlarni olish
+    buyurtma_maxsulotlar = BuyurtmaMaxsulot.objects.filter(buyurtma=instance.buyurtma)
+
+    # Jami qiymatlarni hisoblash uchun boshlang‘ich qiymat
+    jami_qiymat = Decimal('0.00')
+    olingan_qiymat = Decimal('0.00')
+
+    # Ombordagi mahsulotlarning umumiy qiymatini hisoblash
+    for buyurtma_maxsulot in buyurtma_maxsulotlar:
+        jami_qiymat += Ombor.objects.filter(maxsulot=buyurtma_maxsulot.maxsulot).aggregate(
+            total_qiymat=Sum('qiymat')
+        )['total_qiymat'] or Decimal('0.00')
+
+    # OlinganMaxsulot qiymatlarini hisoblash
+    for buyurtma_maxsulot in buyurtma_maxsulotlar:
+        olingan_qiymat += OlinganMaxsulot.objects.filter(
+            buyurtma=instance.buyurtma
+        ).exclude(id=instance.id).aggregate(
+            total_qiymat=Sum('buyurtma__maxsulotlar__qiymat')
+        )['total_qiymat'] or Decimal('0.00')
 
     # JamiMahsulot qiymatini yangilash
-    jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
-    jami_mahsulot.save()
+    for buyurtma_maxsulot in buyurtma_maxsulotlar:
+        jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=buyurtma_maxsulot.maxsulot)
+        jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+        jami_mahsulot.save()
 
 
-@receiver(post_delete, sender=Ombor)
-def update_jami_mahsulot_on_delete(sender, instance, **kwargs):
-    # JamiMahsulot obyektini olish yoki yaratish
-    jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
+# @receiver(post_save, sender=Ombor)
+# def update_jami_mahsulot_on_save(sender, instance, created, **kwargs):
+#     # JamiMahsulot obyektini olish yoki yaratish
+#     jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
     
-    # Ombordagi mahsulot qiymatini hisoblash
-    jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
-        total_qiymat=Sum('qiymat')
-    )['total_qiymat'] or Decimal('0.00')
+#     # Ombordagi mahsulot qiymatini hisoblash
+#     jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
+#         total_qiymat=Sum('qiymat')
+#     )['total_qiymat'] or Decimal('0.00')
     
-    # OlinganMaxsulot qiymatini hisoblash
-    olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
-        total_qiymat=Sum('qiymat')
-    )['total_qiymat'] or Decimal('0.00')
+#     # OlinganMaxsulot qiymatini hisoblash
+#     olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
+#         total_qiymat=Sum('qiymat')
+#     )['total_qiymat'] or Decimal('0.00')
 
-    # JamiMahsulot qiymatini yangilash
-    jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
-    jami_mahsulot.save()
+#     # JamiMahsulot qiymatini yangilash
+#     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+#     jami_mahsulot.save()
+
+
+# @receiver(post_delete, sender=Ombor)
+# def update_jami_mahsulot_on_delete(sender, instance, **kwargs):
+#     # JamiMahsulot obyektini olish yoki yaratish
+#     jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
+    
+#     # Ombordagi mahsulot qiymatini hisoblash
+#     jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
+#         total_qiymat=Sum('qiymat')
+#     )['total_qiymat'] or Decimal('0.00')
+    
+#     # OlinganMaxsulot qiymatini hisoblash
+#     olingan_qiymat = OlinganMaxsulot.objects.filter(maxsulot=instance.maxsulot).aggregate(
+#         total_qiymat=Sum('qiymat')
+#     )['total_qiymat'] or Decimal('0.00')
+
+#     # JamiMahsulot qiymatini yangilash
+#     jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+#     jami_mahsulot.save()
 
 
 
@@ -149,20 +183,16 @@ def update_buyurtma_pre_save(sender, instance, **kwargs):
             instance.active = False
             instance.tasdiqlash = True
 
-            # `omborchi = True` bo'lganda `OlinganMaxsulot` obyektini yaratish
             if not OlinganMaxsulot.objects.filter(buyurtma=instance).exists():
                 OlinganMaxsulot.objects.create(buyurtma=instance)
-                print(f"OlinganMaxsulot yaratildi: {instance} uchun.")
 
         if instance.rad_etish:
             instance.active = False
 
             request = get_current_request()
 
-            # `omborchi = True` bo'lganda `RadEtilganMaxsulot` obyektini yaratish
             if not RadEtilganMaxsulot.objects.filter(buyurtma=instance).exists():
                 RadEtilganMaxsulot.objects.create(buyurtma=instance, rad_etgan_user=request.user)
-                print(f"OlinganMaxsulot yaratildi: {instance} uchun.")
 
 
     # Bog'liq mahsulotlarni avtomatik yangilash (faqat validatsiya uchun)
