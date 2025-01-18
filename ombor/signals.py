@@ -105,7 +105,7 @@ def update_buyurtma_pre_save(sender, instance, **kwargs):
                 # Olingan qiymatlarni hisoblash
                 olingan_qiymat = OlinganMaxsulot.objects.filter(
                     buyurtma=instance
-                ).exclude(id=instance.id).aggregate(
+                ).filter(buyurtma__tasdiqlash=True).exclude(id=instance.id).aggregate(
                     total_qiymat=Sum('buyurtma__maxsulotlar__qiymat')
                 )['total_qiymat'] or Decimal('0.00')
 
