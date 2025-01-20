@@ -121,7 +121,7 @@ class RadEtilganMaxsulot(AsosiyModel):
     def __str__(self):
         return f"{self.buyurtma} raqamli buyurtma"
     
-class Talabnoma(models.Model):
+class Talabnoma(AsosiyModel):
     buyurtma = models.ForeignKey('Buyurtma', on_delete=models.CASCADE)
     talabnoma_pdf = models.FileField(upload_to='talabnoma_pdf', null=True, blank=True)
     active = models.BooleanField(default=True)

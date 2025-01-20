@@ -181,7 +181,7 @@ class TalabnomaGetSerializer(ModelSerializer):
     buyurtma = TalabnomaBuyurtmaSerializer()
     class Meta:
         model = Talabnoma
-        fields = ['buyurtma', 'talabnoma_pdf']
+        fields = ['id', 'buyurtma', 'talabnoma_pdf', 'created_at']
 
 class TalabnomaPostSerializer(ModelSerializer):
     class Meta:
