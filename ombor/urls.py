@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import SimpleRouter
 from .views import KategoriyaViewSet, MaxsulotViewSet, BirlikViewSet, OmborniYopishViewSet, OmborViewSet
-from .views import OlinganMaxsulotViewSet, BuyurtmaViewSet
+from .views import BuyurtmaViewSet
 from .views import RadEtilganMaxsulotlarViewSet, TalabnomaViewSet
 from .views import KorzinkaViewSet, KorzinkaMaxsulotViewSet
 from .views import JamiMahsulotViewSet
@@ -13,7 +13,6 @@ router.register(r'birlik', BirlikViewSet, basename='birlik')
 router.register(r'omborni_yopish', OmborniYopishViewSet, basename='omborni_yopish')
 router.register(r'ombor', OmborViewSet, basename='ombor')
 router.register(r'buyurtma', BuyurtmaViewSet, basename='buyurtma')
-router.register(r'olingan_maxsulotlar', OlinganMaxsulotViewSet, basename='olingan_maxsulotlar')
 router.register(r'rad_etilgan_maxsulotlar', RadEtilganMaxsulotlarViewSet, basename='rad_etilgan_maxsulotlar')
 router.register(r'talabnoma', TalabnomaViewSet, basename='talabnoma')
 router.register(r'korzinka', KorzinkaViewSet, basename='korzinka')

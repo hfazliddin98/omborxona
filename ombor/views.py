@@ -1,15 +1,11 @@
-from rest_framework.views import APIView
-from rest_framework.generics import DestroyAPIView
+
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import filters
-from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from .models import Kategoriya, Maxsulot, Birlik, OmborniYopish, Ombor, Korzinka
-from .models import OlinganMaxsulot, Buyurtma, Talabnoma, RadEtilganMaxsulot
-from .models import KorzinkaMaxsulot
+from .models import Buyurtma, Talabnoma, RadEtilganMaxsulot, KorzinkaMaxsulot
 from .serializers import JamiMahsulotGetSerializer
 from .serializers import KategoriyaPostSerializer, KategoriyaGetSerializer
 from .serializers import MaxsulotGetSerializer, MaxsulotPostSerializer
@@ -18,7 +14,6 @@ from .serializers import KorzinkaMaxsulotPostSerializer
 from .serializers import KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer
 from .serializers import OmborGetSerializer, OmborPostSerializer
-from .serializers import OlinganMaxsulotPostSerializer
 from .serializers import TalabnomaSerializer, JamiMahsulotGetSerializer
 from .serializers import RadEtilganMaxsulotSerializer, RadEtilganMaxsulotPostSerializer
 
@@ -129,18 +124,6 @@ class KorzinkaMaxsulotViewSet(ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    
-# olingan maxsulot
-
-class OlinganMaxsulotViewSet(ModelViewSet):
-    queryset = OlinganMaxsulot.objects.all()
-    serializer_class = OlinganMaxsulotPostSerializer
-    http_method_names = ['patch']
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['buyurtma__komendant_user']
-
-
-
 
 # rad etilgan maxsulot 
 
@@ -159,7 +142,6 @@ class RadEtilganMaxsulotlarViewSet(ModelViewSet):
 
 # jami maxsulot
 
-
 class JamiMahsulotViewSet(ViewSet):
 
     def list(self, request):
@@ -176,13 +158,12 @@ class JamiMahsulotViewSet(ViewSet):
 
 
 
-
-
 class TalabnomaViewSet(ModelViewSet):
     queryset = Talabnoma.objects.all()
     serializer_class = TalabnomaSerializer
+    http_method_names = ['get', 'patch']
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['buyurtma']
+    filterset_fields = ['buyurtma__komendant_user']
 
 
 
