@@ -9,6 +9,27 @@ from users.choices import MaxsulotRoleChoice, UserRoleChoice
 from users.middleware import get_current_request
 
 
+@receiver(post_save, sender=Ombor)
+def update_jami_mahsulot_on_ombor_save(sender, instance, **kwargs):
+    """
+    Omborga mahsulot qo'shilganda yoki yangilanganda jami qiymatlarni hisoblash.
+    """
+    # Ombordagi jami mahsulot qiymatini hisoblash
+    jami_qiymat = Ombor.objects.filter(maxsulot=instance.maxsulot).aggregate(
+        total_qiymat=Sum('qiymat')
+    )['total_qiymat'] or Decimal('0.00')
+
+    # Olingan mahsulotlarning jami qiymatini hisoblash
+    olingan_qiymat = OlinganMaxsulot.objects.filter(
+        maxsulot=instance.maxsulot
+    ).aggregate(
+        total_qiymat=Sum('qiymat')
+    )['total_qiymat'] or Decimal('0.00')
+
+    # JamiMahsulotni yangilash yoki yaratish
+    jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=instance.maxsulot)
+    jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
+    jami_mahsulot.save()
 
 
 @receiver(pre_delete, sender=Korzinka)
