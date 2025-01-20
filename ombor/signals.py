@@ -106,7 +106,6 @@ def update_buyurtma_pre_save(sender, instance, **kwargs):
                         buyurtma=instance,
                         maxsulot=buyurtma_maxsulot.maxsulot,
                         qiymat=buyurtma_maxsulot.qiymat,
-                        active=True,
                     )
 
             # OlinganMaxsulot qiymatlarini hisoblash
