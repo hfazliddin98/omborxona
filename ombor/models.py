@@ -104,11 +104,14 @@ class BuyurtmaMaxsulot(AsosiyModel):
         return self.maxsulot.name 
 
 class OlinganMaxsulot(AsosiyModel):
-    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE)
-    active  = models.BooleanField(default=True)
-   
+    buyurtma = models.ForeignKey(Buyurtma, on_delete=models.CASCADE, related_name='olingan_maxsulotlar')
+    maxsulot = models.ForeignKey(Maxsulot, on_delete=models.CASCADE)
+    qiymat = models.DecimalField(max_digits=10, decimal_places=2)
+    active = models.BooleanField(default=True)
+
     def __str__(self):
-        return f"{self.buyurtma} raqamli buyurtma"
+        return f"{self.buyurtma} - {self.maxsulot.name}"
+ 
 
     
 class RadEtilganMaxsulot(AsosiyModel):

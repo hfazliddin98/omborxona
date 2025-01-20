@@ -18,7 +18,7 @@ from .serializers import KorzinkaMaxsulotPostSerializer
 from .serializers import KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer
 from .serializers import OmborGetSerializer, OmborPostSerializer
-from .serializers import OlinganMaxsulotSerializer, OlinganMaxsulotPostSerializer
+from .serializers import OlinganMaxsulotPostSerializer
 from .serializers import TalabnomaSerializer, JamiMahsulotGetSerializer
 from .serializers import RadEtilganMaxsulotSerializer, RadEtilganMaxsulotPostSerializer
 
@@ -134,14 +134,11 @@ class KorzinkaMaxsulotViewSet(ModelViewSet):
 
 class OlinganMaxsulotViewSet(ModelViewSet):
     queryset = OlinganMaxsulot.objects.all()
-    http_method_names = ['get', 'patch']
+    serializer_class = OlinganMaxsulotPostSerializer
+    http_method_names = ['patch']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['buyurtma__komendant_user']
 
-    def get_serializer_class(self):
-        if self.action in ['list', 'retrieve']:  # GET uchun
-            return OlinganMaxsulotSerializer
-        return OlinganMaxsulotPostSerializer  # POST, PUT, PATCH uchun
 
 
 
@@ -163,41 +160,19 @@ class RadEtilganMaxsulotlarViewSet(ModelViewSet):
 # jami maxsulot
 
 
-# class JamiMahsulotViewSet(ViewSet):
-
-#     def list(self, request):
-#         """
-#         Jami mahsulotlar ro'yxatini GET orqali chiqarish.
-#         """
-#         try:
-#             queryset = Kategoriya.objects.all()
-#             serializer = JamiMahsulotGetSerializer(queryset, many=True)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         except Kategoriya.DoesNotExist:
-#             return Response({"error": " maxsulot topilmadi."}, status=status.HTTP_404_NOT_FOUND)
-    
-
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from decimal import Decimal
-from django.db.models import Sum
-from .models import BuyurtmaMaxsulot, Ombor, OlinganMaxsulot, JamiMahsulot
-from .serializers import JamiMahsulotGetSerializer
-
-class JamiMahsulotViewSet(viewsets.ViewSet):
+class JamiMahsulotViewSet(ViewSet):
 
     def list(self, request):
         """
-        Barcha mahsulotlar ro'yxatini GET orqali chiqarish va hisoblash.
+        Jami mahsulotlar ro'yxatini GET orqali chiqarish.
         """
         try:
-            # Barcha JamiMahsulotlarni JSON formatida qaytarish
-            queryset = Kategoriya.objects.all() # JamiMahsulotlar ro'yxati
+            queryset = Kategoriya.objects.all()
             serializer = JamiMahsulotGetSerializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-
-        except BuyurtmaMaxsulot.DoesNotExist:
-            return Response({"error": "Maxsulot topilmadi."}, status=status.HTTP_404_NOT_FOUND)
+        except Kategoriya.DoesNotExist:
+            return Response({"error": " maxsulot topilmadi."}, status=status.HTTP_404_NOT_FOUND)
+    
 
 
 

@@ -127,19 +127,7 @@ class KorzinkaSerializer(ModelSerializer):
 
 # olingan maxsulot
 
-class KeyingiMaxsulotSerializer(ModelSerializer):
-    komendant_user = UserGetSerializer()
-    maxsulotlar = BuyurtmaMaxsulotSerializer(many=True, read_only=True)
-    class Meta:
-        model = Buyurtma
-        fields = ['id', 'komendant_user', 'maxsulotlar', 'created_at']
 
-
-class OlinganMaxsulotSerializer(ModelSerializer):
-    buyurtma = KeyingiMaxsulotSerializer()
-    class Meta:
-        model = OlinganMaxsulot
-        fields = ['id', 'buyurtma', 'active', 'created_at']
 
 class OlinganMaxsulotPostSerializer(ModelSerializer):
     class Meta:
@@ -149,6 +137,13 @@ class OlinganMaxsulotPostSerializer(ModelSerializer):
 
 # rad etilgan maxsulot
 
+class KeyingiMaxsulotSerializer(ModelSerializer):
+    komendant_user = UserGetSerializer()
+    maxsulotlar = BuyurtmaMaxsulotSerializer(many=True, read_only=True)
+    class Meta:
+        model = Buyurtma
+        fields = ['id', 'komendant_user', 'maxsulotlar', 'created_at']
+        
 class RadEtilganMaxsulotSerializer(ModelSerializer):
     rad_etgan_user = UserGetSerializer()
     buyurtma = KeyingiMaxsulotSerializer()

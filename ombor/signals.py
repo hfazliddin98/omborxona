@@ -71,6 +71,7 @@ def add_korzinka_maxsulot(sender, instance, created, **kwargs):
             )
 
 
+
 @receiver(pre_save, sender=Buyurtma)
 def update_buyurtma_pre_save(sender, instance, **kwargs):
     """
@@ -88,14 +89,25 @@ def update_buyurtma_pre_save(sender, instance, **kwargs):
             instance.active = False
             instance.tasdiqlash = True
 
-            if not OlinganMaxsulot.objects.filter(buyurtma=instance).exists():
-                OlinganMaxsulot.objects.create(buyurtma=instance)
 
             if not Talabnoma.objects.filter(buyurtma=instance).exists():
                 Talabnoma.objects.create(buyurtma=instance)
 
             # Buyurtma bilan bog‘liq barcha mahsulotlarni olish
             buyurtma_maxsulotlar = BuyurtmaMaxsulot.objects.filter(buyurtma=instance)
+
+           
+            for buyurtma_maxsulot in buyurtma_maxsulotlar:
+                # Agar OlinganMaxsulot bo'lmasa, yaratamiz
+                if not OlinganMaxsulot.objects.filter(
+                    buyurtma=instance, maxsulot=buyurtma_maxsulot.maxsulot
+                ).exists():
+                    OlinganMaxsulot.objects.update_or_create(
+                        buyurtma=instance,
+                        maxsulot=buyurtma_maxsulot.maxsulot,
+                        qiymat=buyurtma_maxsulot.qiymat,
+                        active=True,
+                    )
 
             # OlinganMaxsulot qiymatlarini hisoblash
             for buyurtma_maxsulot in buyurtma_maxsulotlar:
@@ -107,11 +119,10 @@ def update_buyurtma_pre_save(sender, instance, **kwargs):
 
                 # Olingan qiymatlarni hisoblash
                 olingan_qiymat = OlinganMaxsulot.objects.filter(
-                    buyurtma=buyurtma_maxsulot.buyurtma
-                ).filter(buyurtma__tasdiqlash=True).exclude(id=instance.id).aggregate(
-                    total_qiymat=Sum('buyurtma__maxsulotlar__qiymat')
-                )['total_qiymat'] or Decimal('0.00')
+                    maxsulot=buyurtma_maxsulot.maxsulot
+                ).aggregate(total_qiymat=Sum('qiymat'))['total_qiymat'] or Decimal('0.00')
 
+          
                 # JamiMahsulotni yangilash
                 jami_mahsulot, _ = JamiMahsulot.objects.get_or_create(maxsulot=buyurtma_maxsulot.maxsulot)
                 jami_mahsulot.qiymat = jami_qiymat - olingan_qiymat
@@ -133,4 +144,5 @@ def update_buyurtma_pre_save(sender, instance, **kwargs):
     for mahsulot in buyurtma_mahsulotlari:
         if mahsulot.qiymat <= 0:
             mahsulot.delete()
+
 
