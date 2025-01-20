@@ -14,7 +14,7 @@ from .serializers import KorzinkaMaxsulotPostSerializer
 from .serializers import KorzinkaSerializer
 from .serializers import BirlikSerializer, OmborniYopishSerializer
 from .serializers import OmborGetSerializer, OmborPostSerializer
-from .serializers import TalabnomaSerializer, JamiMahsulotGetSerializer
+from .serializers import TalabnomaGetSerializer, TalabnomaPostSerializer, JamiMahsulotGetSerializer
 from .serializers import RadEtilganMaxsulotSerializer, RadEtilganMaxsulotPostSerializer
 
 class KategoriyaViewSet(ModelViewSet):
@@ -160,12 +160,15 @@ class JamiMahsulotViewSet(ViewSet):
 
 class TalabnomaViewSet(ModelViewSet):
     queryset = Talabnoma.objects.all()
-    serializer_class = TalabnomaSerializer
     http_method_names = ['get', 'patch']
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['buyurtma__komendant_user']
+    filterset_fields = ['buyurtma__komendant_user', 'active']
 
 
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:  # GET uchun
+            return TalabnomaGetSerializer
+        return TalabnomaPostSerializer  # POST, PUT, PATCH uchun
 
 
 

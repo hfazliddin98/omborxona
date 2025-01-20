@@ -171,9 +171,19 @@ class JamiMahsulotGetSerializer(ModelSerializer):
         jami_mahsulotlar = JamiMahsulot.objects.filter(maxsulot__kategoriya=obj)
         return JamiMahsulotSerializer(jami_mahsulotlar, many=True).data
     
+class TalabnomaBuyurtmaSerializer(ModelSerializer):
+    komendant_user = UserGetSerializer()
+    class Meta:
+        model = Buyurtma
+        fields = ['id', 'komendant_user']
 
+class TalabnomaGetSerializer(ModelSerializer):
+    buyurtma = TalabnomaBuyurtmaSerializer()
+    class Meta:
+        model = Talabnoma
+        fields = ['buyurtma', 'talabnoma_pdf']
 
-class TalabnomaSerializer(ModelSerializer):
+class TalabnomaPostSerializer(ModelSerializer):
     class Meta:
         model = Talabnoma
         fields = ['active']
