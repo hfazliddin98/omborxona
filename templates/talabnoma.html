@@ -1,11 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shartnoma</title>
+    <title>Talabnoma</title>
     <link rel="icon" type="image/x-icon" href="{% static '/img/kspi-logo.png' %}">
 
 </head>
@@ -63,7 +62,7 @@
         
         {% if xojalik %}
             <p style="align-items: center;">
-                <img src="{{xojalik_bolimi.qr_code_link}}" width="40" height="40">
+                <img src="{{xojalik.qr_code_link}}" width="40" height="40">
                 <strong>Xo`jalik bo`limi : </strong>
                 {{xojalik.last_name}}  {{xojalik.first_name}}
             </p>
@@ -71,7 +70,7 @@
 
         {% if rttm %}
             <p style="align-items: center;">
-                <img src="{{it_park.qr_code_link}}" width="40" height="40">
+                <img src="{{rttm.qr_code_link}}" width="40" height="40">
                 <strong>IT Park : </strong>
                 {{rttm.last_name}}  {{rttm.first_name}}
             </p>
