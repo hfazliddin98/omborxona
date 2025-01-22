@@ -16,8 +16,8 @@ SECRET_KEY = 'django-insecure-v3@ig_hsld#oqrqf4makfzm!a_2ocr553#9vef4$p07iwdo5d#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-DOMEN = 'omborxona2024.pythonanywhere.com'
-# DOMEN = 'apiombor.kspi.uz'
+# DOMEN = 'omborxona2024.pythonanywhere.com'
+DOMEN = 'apiombor.kspi.uz'
 LOCAL_DOMEN = '127.0.0.1'
 
 ALLOWED_HOSTS = ['.kokanddeveloper.uz', DOMEN, 'localhost', LOCAL_DOMEN]
@@ -64,7 +64,7 @@ ROOT_URLCONF = 'asosiy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -155,24 +155,24 @@ SIMPLE_JWT = {
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'ombor',
-#         'USER': 'omboruser',
-#         'PASSWORD': 'Hfazliddin98',
-#         'HOST': 'localhost',
-#         'PORT': '',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ombor',
+        'USER': 'omboruser',
+        'PASSWORD': 'Hfazliddin98',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
 
 
 # Password validation
