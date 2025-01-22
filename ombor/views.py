@@ -19,6 +19,7 @@ from .serializers import RadEtilganMaxsulotSerializer, RadEtilganMaxsulotPostSer
 
 class KategoriyaViewSet(ModelViewSet):
     queryset = Kategoriya.objects.all()
+    http_method_names = ['get', 'post', 'patch']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
 
@@ -30,6 +31,7 @@ class KategoriyaViewSet(ModelViewSet):
 
 class MaxsulotViewSet(ModelViewSet):
     queryset = Maxsulot.objects.all()
+    http_method_names = ['get', 'post', 'patch']
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['kategoriya', 'maxviylik', 'birlik']
         
@@ -40,6 +42,7 @@ class MaxsulotViewSet(ModelViewSet):
 
 class BirlikViewSet(ModelViewSet):
     queryset = Birlik.objects.all()
+    http_method_names = ['get', 'post', 'patch']
     serializer_class = BirlikSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
