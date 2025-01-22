@@ -16,8 +16,8 @@ SECRET_KEY = 'django-insecure-v3@ig_hsld#oqrqf4makfzm!a_2ocr553#9vef4$p07iwdo5d#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# DOMEN = 'omborxona2024.pythonanywhere.com'
-DOMEN = 'apiombor.kspi.uz'
+DOMEN = 'omborxona2024.pythonanywhere.com'
+# DOMEN = 'apiombor.kspi.uz'
 LOCAL_DOMEN = '127.0.0.1'
 
 ALLOWED_HOSTS = ['.kokanddeveloper.uz', DOMEN, 'localhost', LOCAL_DOMEN]
@@ -94,8 +94,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    # 'PAGE_SIZE': 120
 
 }
 
@@ -168,11 +166,11 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'omborxona',
-#         'USER': 'omborxonauser',
+#         'NAME': 'ombor',
+#         'USER': 'omboruser',
 #         'PASSWORD': 'Hfazliddin98',
-#         'HOST': '192.168.0.179',
-#         'PORT': '5432',
+#         'HOST': 'localhost',
+#         'PORT': '',
 #     }
 # }
 
