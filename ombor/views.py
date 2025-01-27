@@ -1,6 +1,7 @@
 
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import ValidationError 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -162,10 +163,11 @@ class JamiMahsulotViewSet(ViewSet):
 
 
 class TalabnomaViewSet(ModelViewSet):
+    permission_classes = [AllowAny]
     queryset = Talabnoma.objects.all()
     http_method_names = ['get', 'patch']
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['buyurtma__komendant_user', 'active']
+    filterset_fields = ['buyurtma__komendant_user','buyurtma', 'active']
 
 
     def get_serializer_class(self):
