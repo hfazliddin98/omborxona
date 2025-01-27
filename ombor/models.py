@@ -197,97 +197,194 @@ def generate_pdf_rus(file_path, data):
     current_height -= 30
     c.drawString(60, current_height, data['matn'])
 
-    # 3. Jadval
+    # Jadval ustunlarining kengligi
+    column_widths = [30, 370, 80]  # №, Mahsulot, Qiymat
+
+    # Jadval boshidan boshlash
+    c.setFont("FreeSerif", 12)
     current_height -= 40
-    table_data = [["№", "Маҳсулот", "Қиймат"]]
+    x_position = 60  # Jadvalning boshlanish x koordinatasi
+    row_height = 20  # Har bir qator balandligi
+
+    # Boshqa rangda ustun nomlarini chizish (masalan, sarlavhalar)
+    c.setFillColorRGB(0.8, 0.8, 0.8)  # Sarlavhalar uchun to‘ldirish rangini o‘zgartirish
+    c.rect(x_position, current_height, sum(column_widths), row_height, stroke=1, fill=1)
+
+    # Sarlavha matnini chizish
+    c.setFillColorRGB(0, 0, 0)  # Sarlavhalar qora rangda bo‘lishi uchun
+    c.drawString(x_position + 5, current_height + 5, "№")
+    c.drawString(x_position + column_widths[0] + 5, current_height + 5, "Маҳсулот")
+    c.drawString(x_position + column_widths[0] + column_widths[1] + 5, current_height + 5, "Қиймат")
+
+    # Sarlavha oxirida balandlikni yangilash
+    current_height -= row_height
+
+    # Har bir mahsulot uchun qatorlarni chizish
     for idx, mahsulot in enumerate(data['maxsulotlar'], start=1):
-        table_data.append([str(idx), mahsulot.maxsulot, f"{mahsulot.qiymat} {mahsulot.maxsulot.birlik}"])
 
-    table = Table(table_data, colWidths=[30, 350, 100])
-    table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'FreeSerif'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 5),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-    ]))
-    table_height = len(table_data) * 20  # Jadval balandligini hisoblash
-    table.wrapOn(c, width, height)
-    table.drawOn(c, 60, current_height - table_height)
+        # QR kod va boshqa ma'lumotlarni chizish
+        if current_height <= 100:  # Agar sahifa tugashga yaqin bo'lsa
+            c.showPage()  # Yangi sahifa ochish
+            font_path = os.path.join(settings.STATIC_ROOT, 'font', 'FreeSerif.ttf')
+            pdfmetrics.registerFont(TTFont('FreeSerif', font_path))
+            c.setFont("FreeSerif", 12)
+            current_height = height - 50  # Yangi sahifadagi boshlang'ich balandlik
 
-    # Jadvaldan keyingi matnlar (oxirgi qism)
-    current_height -= (table_height + 40)
-    if current_height > 50:  # Agar joy yetarli bo'lsa
-        c.drawString(60, current_height, "Молия ва иқтисодиёт ишлари бўйича проректори :")
-        current_height -= 30
-        if data['prorektor'].qr_code_link:  # QR-kod mavjudligini tekshirish
-            qr_path = data['prorektor'].qr_code_link  # Rasm url
-            qr_image = ImageReader(qr_path)
-            c.drawString(60, current_height+15, data['prorektor_fish'])
-            c.drawImage(qr_image, 500, current_height, width=50, height=50)
-        else:
-            c.drawString(450, current_height, "QR-код мавжуд эмас.")
+        # Har bir qatorni chizish
+        c.rect(x_position, current_height, sum(column_widths), row_height, stroke=1, fill=0)
 
-        current_height -= 20
-        c.drawString(60, current_height, "Бугалтер :")
-        current_height -= 30
-        if data['bugalter'].qr_code_link:  # QR-kod mavjudligini tekshirish
-            qr_path = data['bugalter'].qr_code_link  # Rasm url
-            qr_image = ImageReader(qr_path)
-            c.drawString(60, current_height+15, data['bugalter_fish'])
-            c.drawImage(qr_image, 500, current_height, width=50, height=50)
-        else:
-            c.drawString(450, current_height, "QR-код мавжуд эмас.")
+        # Ma'lumotlarni joylashtirish
+        c.drawString(x_position + 5, current_height + 5, f"{idx}")
+        c.drawString(x_position + column_widths[0] + 5, current_height + 5, f"{mahsulot.maxsulot}")
+        c.drawString(x_position + column_widths[0] + column_widths[1] + 5, current_height + 5, f"{mahsulot.qiymat} {mahsulot.maxsulot.birlik}")
 
-        current_height -= 20
-        c.drawString(60, current_height, "Омборчи :")
-        current_height -= 30
-        if data['omborchi'].qr_code_link:  # QR-kod mavjudligini tekshirish
-            qr_path = data['omborchi'].qr_code_link  # Rasm url
-            qr_image = ImageReader(qr_path)
-            c.drawString(60, current_height+15, data['omborchi_fish'])
-            c.drawImage(qr_image, 500, current_height, width=50, height=50)
-        else:
-            c.drawString(450, current_height, "QR-код мавжуд эмас.")
+        # Qator balandligini yangilash
+        current_height -= row_height
 
-        current_height -= 20
-        c.drawString(60, current_height, "РТТМ :")
-        current_height -= 30
-        if data['rttm'].qr_code_link:  # QR-kod mavjudligini tekshirish
-            qr_path = data['rttm'].qr_code_link  # Rasm url
-            qr_image = ImageReader(qr_path)
-            c.drawString(60, current_height+15, data['rttm_fish'])
-            c.drawImage(qr_image, 500, current_height, width=50, height=50)
-        else:
-            c.drawString(450, current_height, "QR-код мавжуд эмас.")
 
-        current_height -= 20
-        c.drawString(60, current_height, "Хўжалик бўлими :")
-        current_height -= 30
-        if data['xojalik'].qr_code_link:  # QR-kod mavjudligini tekshirish
-            qr_path = data['xojalik'].qr_code_link  # Rasm url
-            qr_image = ImageReader(qr_path)
-            c.drawString(60, current_height+15, data['xojalik_fish'])
-            c.drawImage(qr_image, 500, current_height, width=50, height=50)
-        else:
-            c.drawString(450, current_height, "QR-код мавжуд эмас.")
 
-        current_height -= 150
 
-        if data['buyurtma']:
-            print(data['buyurtma'])
-            qr_base64 = generate_qr_code_base64(data['buyurtma'])  # QR kodni base64 formatida olish
-            buffer = BytesIO(base64.b64decode(qr_base64))  # Base64'dan rasmga o'tkazish
-            qr_image = ImageReader(buffer)
-            c.drawImage(qr_image, 60, current_height, width=100, height=100)
-        else:
-            c.drawString(450, current_height, "QR-код мавжуд эмас.")
-    else:
+
+
+
+    
+
+     # QR kod va boshqa ma'lumotlarni chizish
+    if current_height <= 100:  # Agar sahifa tugashga yaqin bo'lsa
         c.showPage()  # Yangi sahifa ochish
-        current_height = height - 50
-        c.drawString(60, current_height, "Ohiri")
+        font_path = os.path.join(settings.STATIC_ROOT, 'font', 'FreeSerif.ttf')
+        pdfmetrics.registerFont(TTFont('FreeSerif', font_path))
+        c.setFont("FreeSerif", 12)
+        current_height = height - 50  # Yangi sahifadagi boshlang'ich balandlik
 
+
+    current_height -= 40
+    c.drawString(60, current_height, "Молия ва иқтисодиёт ишлари бўйича проректори :")
+    current_height -= 30
+    if data['prorektor'].qr_code_link:  # QR-kod mavjudligini tekshirish
+        qr_path = data['prorektor'].qr_code_link  # Rasm url
+        qr_image = ImageReader(qr_path)
+        c.drawString(60, current_height+15, data['prorektor_fish'])
+        c.drawImage(qr_image, 500, current_height, width=50, height=50)
+    else:
+        c.drawString(450, current_height, "QR-код мавжуд эмас.")
+
+
+
+    if current_height <= 100:  # Agar sahifa tugashga yaqin bo'lsa
+        c.showPage()  # Yangi sahifa ochish
+
+        # Static katalogdagi shrift faylini yuklash
+        font_path = os.path.join(settings.STATIC_ROOT, 'font', 'FreeSerif.ttf')
+
+        pdfmetrics.registerFont(TTFont('FreeSerif', font_path))
+        c.setFont("FreeSerif", 12)
+        current_height = height - 50  # Yangi sahifadagi boshlang'ich balandlik
+
+    current_height -= 20
+    c.drawString(60, current_height, "Бугалтер :")
+    current_height -= 30
+    if data['bugalter'].qr_code_link:  # QR-kod mavjudligini tekshirish
+        qr_path = data['bugalter'].qr_code_link  # Rasm url
+        qr_image = ImageReader(qr_path)
+        c.drawString(60, current_height+15, data['bugalter_fish'])
+        c.drawImage(qr_image, 500, current_height, width=50, height=50)
+    else:
+        c.drawString(450, current_height, "QR-код мавжуд эмас.")
+
+
+
+    if current_height <= 100:  # Agar sahifa tugashga yaqin bo'lsa
+        c.showPage()  # Yangi sahifa ochish
+
+        # Static katalogdagi shrift faylini yuklash
+        font_path = os.path.join(settings.STATIC_ROOT, 'font', 'FreeSerif.ttf')
+
+        pdfmetrics.registerFont(TTFont('FreeSerif', font_path))
+        c.setFont("FreeSerif", 12)
+        current_height = height - 50  # Yangi sahifadagi boshlang'ich balandlik
+
+    current_height -= 20
+    c.drawString(60, current_height, "Омборчи :")
+    current_height -= 30
+    if data['omborchi'].qr_code_link:  # QR-kod mavjudligini tekshirish
+        qr_path = data['omborchi'].qr_code_link  # Rasm url
+        qr_image = ImageReader(qr_path)
+        c.drawString(60, current_height+15, data['omborchi_fish'])
+        c.drawImage(qr_image, 500, current_height, width=50, height=50)
+    else:
+        c.drawString(450, current_height, "QR-код мавжуд эмас.")
+
+
+
+    if current_height <= 100:  # Agar sahifa tugashga yaqin bo'lsa
+        c.showPage()  # Yangi sahifa ochish
+
+        # Static katalogdagi shrift faylini yuklash
+        font_path = os.path.join(settings.STATIC_ROOT, 'font', 'FreeSerif.ttf')
+
+        pdfmetrics.registerFont(TTFont('FreeSerif', font_path))
+        c.setFont("FreeSerif", 12)
+        current_height = height - 50  # Yangi sahifadagi boshlang'ich balandlik
+
+    current_height -= 20
+    c.drawString(60, current_height, "РТТМ :")
+    current_height -= 30
+    if data['rttm'].qr_code_link:  # QR-kod mavjudligini tekshirish
+        qr_path = data['rttm'].qr_code_link  # Rasm url
+        qr_image = ImageReader(qr_path)
+        c.drawString(60, current_height+15, data['rttm_fish'])
+        c.drawImage(qr_image, 500, current_height, width=50, height=50)
+    else:
+        c.drawString(450, current_height, "QR-код мавжуд эмас.")
+
+
+
+
+    if current_height <= 100:  # Agar sahifa tugashga yaqin bo'lsa
+        c.showPage()  # Yangi sahifa ochish
+
+        # Static katalogdagi shrift faylini yuklash
+        font_path = os.path.join(settings.STATIC_ROOT, 'font', 'FreeSerif.ttf')
+
+        pdfmetrics.registerFont(TTFont('FreeSerif', font_path))
+        c.setFont("FreeSerif", 12)
+        current_height = height - 50  # Yangi sahifadagi boshlang'ich balandlik
+
+    current_height -= 20
+    c.drawString(60, current_height, "Хўжалик бўлими :")
+    current_height -= 30
+    if data['xojalik'].qr_code_link:  # QR-kod mavjudligini tekshirish
+        qr_path = data['xojalik'].qr_code_link  # Rasm url
+        qr_image = ImageReader(qr_path)
+        c.drawString(60, current_height+15, data['xojalik_fish'])
+        c.drawImage(qr_image, 500, current_height, width=50, height=50)
+    else:
+        c.drawString(450, current_height, "QR-код мавжуд эмас.")
+
+
+
+
+    if current_height <= 100:  # Agar sahifa tugashga yaqin bo'lsa
+        c.showPage()  # Yangi sahifa ochish
+
+        # Static katalogdagi shrift faylini yuklash
+        font_path = os.path.join(settings.STATIC_ROOT, 'font', 'FreeSerif.ttf')
+
+        pdfmetrics.registerFont(TTFont('FreeSerif', font_path))
+        c.setFont("FreeSerif", 12)
+        current_height = height - 50  # Yangi sahifadagi boshlang'ich balandlik
+
+    current_height -= 150
+    if data['buyurtma']:
+        print(data['buyurtma'])
+        qr_base64 = generate_qr_code_base64(data['buyurtma'])  # QR kodni base64 formatida olish
+        buffer = BytesIO(base64.b64decode(qr_base64))  # Base64'dan rasmga o'tkazish
+        qr_image = ImageReader(buffer)
+        c.drawImage(qr_image, 60, current_height, width=100, height=100)
+    else:
+        c.drawString(450, current_height, "QR-код мавжуд эмас.")
+  
     # PDFni saqlash
     c.save()
 
